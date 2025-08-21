@@ -1,0 +1,304 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* The Yard Heist - Dark Prison Theme Design System */
+
+@layer base {
+  :root {
+    /* Accent colors for paint effects */
+    --accent-purple: #6a0dad;
+    --accent-green: #2e971b;
+    --accent-orange: #c25e16;
+    --accent-blue: #00bfff;
+    --accent-yellow: #b89f0e;
+    --accent-red: #ff0000;
+
+    /* Core theme - dark prison aesthetic */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 276 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 85%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 120 100% 55%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 12%;
+    --ring: 276 100% 50%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 95%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+}
+
+@layer utilities {
+
+  /* Paint drip effects */
+  .paint-drip-purple {
+    color: var(--accent-purple);
+    position: relative;
+    filter: drop-shadow(0 2px 4px var(--accent-purple));
+  }
+
+  /* .paint-drip-purple::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 20%;
+    width: 4px;
+    height: 12px;
+    background: var(--accent-purple);
+    border-radius: 0 0 2px 2px;
+    opacity: 0.8;
+  } */
+
+  .paint-drip-green {
+    color: var(--accent-green);
+    position: relative;
+    filter: drop-shadow(0 1px 2px var(--accent-green));
+  }
+
+  .paint-drip-orange {
+    color: var(--accent-orange);
+    position: relative;
+    filter: drop-shadow(0 1px 2px var(--accent-orange));
+  }
+
+  .paint-drip-blue {
+    color: var(--accent-blue);
+    position: relative;
+    filter: drop-shadow(0 1px 2px var(--accent-blue));
+  }
+
+  .paint-drip-yellow {
+    color: var(--accent-yellow);
+    position: relative;
+    filter: drop-shadow(0 1px 2px var(--accent-yellow));
+  }
+
+  .paint-drip-red {
+    color: var(--accent-red);
+    position: relative;
+    filter: drop-shadow(0 1px 2px var(--accent-red));
+  }
+
+  /* Paint splatter effects */
+  .paint-splatter-purple {
+    box-shadow: 0 0 15px rgba(106, 13, 173, 0.4), inset 0 0 10px rgba(106, 13, 173, 0.2);
+    border: 2px solid #6a0dad99;
+    position: relative;
+  }
+
+  .paint-splatter-green {
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4), inset 0 0 10px rgba(57, 255, 20, 0.2);
+    border: 2px solid rgba(57, 255, 20, 0.6);
+  }
+
+  .paint-splatter-orange {
+    box-shadow: 0 0 15px rgba(255, 106, 0, 0.4), inset 0 0 10px rgba(255, 106, 0, 0.2);
+    border: 2px solid rgba(255, 106, 0, 0.6);
+  }
+
+  .paint-splatter-blue {
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4), inset 0 0 10px rgba(0, 191, 255, 0.2);
+    border: 2px solid rgba(0, 191, 255, 0.6);
+  }
+
+  .paint-splatter-yellow {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), inset 0 0 10px rgba(255, 215, 0, 0.2);
+    border: 2px solid rgba(255, 215, 0, 0.6);
+  }
+
+  .paint-splatter-red {
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
+    border: 2px solid rgba(255, 0, 0, 0.6);
+  }
+
+  /* Paint stains pattern */
+  .paint-stains {
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(106, 13, 173, 0.1) 8px, transparent 8px),
+      radial-gradient(circle at 85% 15%, rgba(57, 255, 20, 0.08) 12px, transparent 12px),
+      radial-gradient(circle at 45% 80%, rgba(255, 106, 0, 0.06) 6px, transparent 6px),
+      radial-gradient(circle at 75% 60%, rgba(255, 0, 0, 0.08) 10px, transparent 10px),
+      radial-gradient(circle at 25% 70%, rgba(255, 215, 0, 0.05) 14px, transparent 14px);
+    background-size: 400px 400px, 600px 600px, 300px 300px, 500px 500px, 700px 700px;
+  }
+
+  /* Concrete texture with paint splatters */
+  .concrete-texture {
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      radial-gradient(ellipse at 60% 30%, rgba(106, 13, 173, 0.05) 3px, transparent 3px);
+  }
+
+  /* Glitch animation keyframes */
+  @keyframes glitch {
+
+    0%,
+    100% {
+      transform: translate(0);
+    }
+
+    20% {
+      transform: translate(-2px, 2px);
+    }
+
+    40% {
+      transform: translate(-2px, -2px);
+    }
+
+    60% {
+      transform: translate(2px, 2px);
+    }
+
+    80% {
+      transform: translate(2px, -2px);
+    }
+  }
+
+  .glitch-text {
+    animation: glitch 0.9s infinite;
+  }
+
+  /* Flip animation for countdown */
+  @keyframes flip {
+    0% {
+      transform: rotateX(0);
+    }
+
+    50% {
+      transform: rotateX(-90deg);
+    }
+
+    100% {
+      transform: rotateX(0);
+    }
+  }
+
+  .flip-animation {
+    animation: flip 0.6s ease-in-out;
+  }
+
+  @keyframes gradient {
+    0% {
+      backgroundPosition: "0% 50%"
+    }
+
+    50% {
+      backgroundPosition: "100% 50%"
+    }
+
+    100% {
+      backgroundPosition: "0% 50%"
+    }
+  }
+
+  @keyframes border-move {
+    0% {
+      background-position: 0% 0%;
+    }
+
+    100% {
+      background-position: 400% 0%;
+    }
+  }
+
+  .border-animated {
+    background: linear-gradient(90deg,
+        purple,
+        blue,
+        #2cc911,
+        orange,
+        yellow,
+        red,
+        purple);
+    background-size: 400% 100%;
+    animation: border-move 8s linear infinite;
+    padding: 3px;
+    border-radius: 1rem;
+  }
+
+}
