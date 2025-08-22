@@ -335,9 +335,8 @@ const TheYardHeist = () => {
             >
               COMING SOON
             </motion.h1>
-            <p className="text-xl md:text-5xl mb-12 text-muted-foreground w-[55%]">
-              THE FUTURE OF
-              LIVE SPORTS BETTING
+            <p className="text-xl md:text-5xl mb-12 text-muted-foreground w-[70%]">
+              Your <span className=" paint-drip-orange">Game</span>, Your <span className='paint-drip-orange'>Bet</span>, Your <span className='paint-drip-orange'>Future</span>.
             </p>
 
             <div className="mb-12">
@@ -632,7 +631,14 @@ const TheYardHeist = () => {
               <h4 className="font-semibold mb-4">Follow Us</h4>
               <div className="flex space-x-4">
                 <Button variant="ghost" size="sm">
-                  <Twitter className="w-4 h-4" />
+                  <a
+                    href="https://x.com/YardHeist"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Twitter className="w-4 h-4" />
+                  </a>
+
                 </Button>
                 <Button variant="ghost" size="sm">
                   <Github className="w-4 h-4" />
@@ -661,7 +667,7 @@ const TheYardHeist = () => {
           </div>
 
           <div className="text-center mt-8 pt-8 border-t border-border text-sm text-muted-foreground">
-            © 2024 The Yard Heist. All rights reserved. • Licensed in Curacao
+            © 2025 The Yard Heist. All rights reserved.
           </div>
         </div>
       </footer>
