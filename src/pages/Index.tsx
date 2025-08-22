@@ -9,8 +9,11 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Shield, Globe, Twitter, Github, Mail, Wallet, Play, Lock, Zap, Target } from "lucide-react";
 
-// Import game images
-import logoImage from "@/assets/yard-heist-logo.jpg";
+// Import assets
+import logoImage from "@/assets/logo-yardhiest.jpg";
+import logoNameImage from "@/assets/background-removed.png";
+import homePageVideo from "@/assets/home page video.mp4";
+import backgroundVideo from "@/assets/background 2.mp4";
 import fenceBreakImage from "@/assets/fence-break-roulette.jpg";
 import coinTossImage from "@/assets/coin-toss.jpg";
 import getawayCrashImage from "@/assets/getaway-crash.jpg";
@@ -277,13 +280,17 @@ const TheYardHeist = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border">
         <div className="container mx-auto px-2 py-2 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center">
             <img
               src={logoImage}
-              alt="Yard Heist"
+              alt="Yard Heist Logo"
               className="w-20 h-20 rounded-lg"
             />
-            <h1 className="text-xl font-bold paint-drip-purple">YARD HEIST</h1>
+            <img
+              src={logoNameImage}
+              alt="Yard Heist Name"
+              className="h-20 object-contain"
+            />
           </div>
           <Button variant="outline" className="paint-splatter-green">
             <Wallet className="w-4 h-4 mr-2" />
@@ -294,12 +301,26 @@ const TheYardHeist = () => {
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 py-20 text-center mb-20">
+        <section className="relative h-screen mx-auto px-4 py-20 text-center mb-20 overflow-hidden flex items-center justify-center">
+          {/* Hero Background Video */}
+          <div className="absolute inset-0 w-full h-full -z-10">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover opacity-80"
+            >
+              <source src={homePageVideo} type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-black/60" />
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className='flex items-center flex-col'
+            className='flex items-center flex-col relative z-10'
           >
             <motion.h1
               className="text-6xl md:text-9xl font-bold mb-6 glitch-text"
@@ -537,11 +558,24 @@ const TheYardHeist = () => {
         </section>
 
         {/* Final CTA */}
-        <section className="container mx-auto px-4 py-20 text-center flex items-center flex-col">
+        <section className="relative h-screen mx-auto px-4 py-20 text-center flex items-center justify-center flex-col overflow-hidden">
+          {/* Background Video for Final CTA */}
+          <div className="absolute inset-0 w-full h-full -z-10">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover opacity-80"
+            >
+              <source src={backgroundVideo} type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-black/70" />
+          </div>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative w-fit "
+            className="relative w-fit z-10"
           >
 
             <div className="relative border-animated rounded-2xl">
@@ -577,13 +611,17 @@ const TheYardHeist = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center space-x-3 mb-4">
+              <div className="flex items-center mb-4">
                 <img
                   src={logoImage}
                   alt="The Yard Heist"
-                  className="w-8 h-8 rounded"
+                  className="w-12 h-12 rounded"
                 />
-                <span className="font-bold paint-drip-purple">THE YARD HEIST </span>
+                <img
+                  src={logoNameImage}
+                  alt="The Yard Heist Name"
+                  className="h-20 object-contain"
+                />
               </div>
               <p className="text-sm text-muted-foreground">
                 High-stakes crypto gaming in the darkest corners of the web. Win big or lose it all.
