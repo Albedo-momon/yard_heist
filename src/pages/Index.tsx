@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Shield, Globe, Twitter, Github, Mail, Wallet, Play, Lock, Zap, Target } from "lucide-react";
+import { Clock, Shield, Globe, XIcon, Github, Mail, Wallet, Play, Lock, Zap, Target } from "lucide-react";
 
 // Import assets
 import logoImage from "@/assets/logo-yardhiest.jpg";
@@ -128,12 +128,9 @@ const CountdownTimer = () => {
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
     <motion.div
       key={value}
-      initial={{ rotateX: 0 }}
-      animate={{ rotateX: [0, -90, 0] }}
-      transition={{ duration: 0.8 }}
       className="flex flex-col items-center"
     >
-      <div className="bg-card border border-border rounded-lg p-4 min-w-[80px] text-center paint-splatter-purple">
+      <div className="bg-card  border border-border rounded-lg p-1 md:p-4 min-w-[80px] text-center paint-splatter-purple">
         <div className="text-2xl md:text-4xl font-bold ">
           {value.toString().padStart(2, '0')}
         </div>
@@ -145,7 +142,7 @@ const CountdownTimer = () => {
   );
 
   return (
-    <div className="flex gap-4 justify-center ">
+    <div className="flex gap-2 md:gap-4 justify-center ">
       <TimeUnit value={timeLeft.days} label="Days" />
       <TimeUnit value={timeLeft.hours} label="Hours" />
       <TimeUnit value={timeLeft.minutes} label="Minutes" />
@@ -156,6 +153,7 @@ const CountdownTimer = () => {
 
 const GameCard = ({ game }: { game: Game }) => {
   const [isHovered, setIsHovered] = useState(false);
+
   const [notifyEnabled, setNotifyEnabled] = useState(false);
 
   return (
@@ -266,6 +264,7 @@ const TheYardHeist = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [whitelistProgress] = useState(73);
+  const [open, setOpen] = useState(false);
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -284,18 +283,27 @@ const TheYardHeist = () => {
             <img
               src={logoImage}
               alt="Yard Heist Logo"
-              className="w-20 h-20 rounded-lg"
+              className="w-10 h-10 md:w-20 md:h-20 rounded-lg"
             />
             <img
               src={logoNameImage}
               alt="Yard Heist Name"
-              className="h-20 object-contain"
+              className="h-10 md:h-20 object-contain"
             />
           </div>
-          <Button variant="outline" className="paint-splatter-green">
+          <Button variant="outline" className="paint-splatter-green" onClick={() => setOpen(true)}>
             <Wallet className="w-4 h-4 mr-2" />
-            Connect Wallet
+            <span className='hidden sm:inline'>Connect</span>  Wallet
           </Button>
+
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Coming Soon 🚀</DialogTitle>
+              </DialogHeader>
+              <p className="text-sm text-gray-500">Wallet connection feature will be available soon.</p>
+            </DialogContent>
+          </Dialog>
         </div>
       </header>
 
@@ -323,7 +331,7 @@ const TheYardHeist = () => {
             className='flex items-center flex-col relative z-10'
           >
             <motion.h1
-              className="text-6xl md:text-9xl font-bold mb-6 glitch-text"
+              className="text-5xl md:text-9xl font-bold mb-6 glitch-text"
               animate={{
                 filter: [
                   "drop-shadow(0 2px 4px var(--accent-purple))",
@@ -336,7 +344,7 @@ const TheYardHeist = () => {
               COMING SOON
             </motion.h1>
             <p className="text-xl md:text-5xl mb-12 text-muted-foreground w-[70%]">
-              Your <span className=" paint-drip-orange">Game</span>, Your <span className='paint-drip-orange'>Bet</span>, Your <span className='paint-drip-orange'>Future</span>.
+              Your <span className="paint-drip-orange">Game</span>, Your <span className='paint-drip-orange'>Skill</span>, Your <span className='paint-drip-orange'>Future</span>.
             </p>
 
             <div className="mb-12">
@@ -344,6 +352,11 @@ const TheYardHeist = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+              <Button size="lg" variant="outline" className="paint-splatter-green text-lg px-8">
+                <Lock className="w-5 h-5 mr-2" />
+                Join Beta (Whishlist)
+              </Button>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button size="lg" className="paint-splatter-purple text-lg px-8">
@@ -373,16 +386,13 @@ const TheYardHeist = () => {
                 </DialogContent>
               </Dialog>
 
-              <Button size="lg" variant="outline" className="paint-splatter-green text-lg px-8">
-                <Lock className="w-5 h-5 mr-2" />
-                Join Beta (Whishlist)
-              </Button>
+
             </div>
           </motion.div>
         </section>
 
         {/* Whitelist Progress */}
-        <section className="container mx-auto px-2 py-12 mb-20">
+        <section className="container mx-auto px-2 py-12">
           <Card className="max-w-2xl mx-auto bg-card/50 backdrop-blur">
             <CardContent className="p-6">
               <div className="text-center mb-4">
@@ -401,7 +411,7 @@ const TheYardHeist = () => {
         </section>
 
         {/* Games Showcase */}
-        <section className="container mx-auto px-4 py-20">
+        {/* <section className="container mx-auto px-4 py-20">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 paint-drip-green">
               Choose Your Game
@@ -416,7 +426,7 @@ const TheYardHeist = () => {
               <GameCard key={game.id} game={game} />
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* Crypto Section */}
         <section className="container mx-auto px-4 py-20 bg-card/20 backdrop-blur rounded-lg">
@@ -557,8 +567,8 @@ const TheYardHeist = () => {
         </section>
 
         {/* Final CTA */}
-        <section className="relative h-screen mx-auto px-4 py-20 text-center flex items-center justify-center flex-col overflow-hidden">
-          {/* Background Video for Final CTA */}
+        <section className="relative min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center flex items-center justify-center flex-col overflow-hidden">
+          {/* Background Video */}
           <div className="absolute inset-0 w-full h-full -z-10">
             <video
               autoPlay
@@ -571,38 +581,50 @@ const TheYardHeist = () => {
             </video>
             <div className="absolute inset-0 bg-black/70" />
           </div>
+
+          {/* CTA Button */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="relative w-fit z-10"
           >
-
             <div className="relative border-animated rounded-2xl">
               <Button
                 size="lg"
-                className="relative text-2xl px-16 py-8 w-fit h-auto text-white bg-black shadow-2xl transition-all duration-300 rounded-2xl hover:bg-[.paint-drip-green]"
+                className="
+          relative
+          text-lg sm:text-xl md:text-2xl
+          px-8 sm:px-12 md:px-16
+          py-4 sm:py-6 md:py-8
+          w-fit h-auto
+          text-white
+          bg-black
+          shadow-2xl
+          transition-all
+          duration-300
+          rounded-2xl
+          hover:bg-[.paint-drip-green]
+        "
               >
-                <div className="flex items-center">
-                  <span className="text-3xl mr-4">💀</span>
-                  <div className="flex flex-col">
-                    <span className="font-black tracking-wider">BREAK INTO</span>
-                    <span className="font-black tracking-wider">THE YARD</span>
+                <div className="flex  xs:flex-row items-center gap-4 justify-center">
+                  <span className="text-2xl sm:text-3xl mr-0 xs:mr-4 mb-2 xs:mb-0">💀</span>
+                  <div className="flex flex-col items-center xs:items-start">
+                    <span className="font-black tracking-wider leading-none">BREAK INTO</span>
+                    <span className="font-black tracking-wider leading-none">THE YARD</span>
                   </div>
-                  <span className="text-3xl ml-4">💰</span>
+                  <span className="text-2xl sm:text-3xl ml-0 xs:ml-4 mt-2 xs:mt-0">💰</span>
                 </div>
               </Button>
             </div>
-
-
-
-
-
-
           </motion.div>
-          <p className="mt-6 text-muted-foreground paint-drip-red">
+
+          {/* Subtitle */}
+          <p className="mt-6 text-sm sm:text-base md:text-lg text-muted-foreground paint-drip-red px-2 max-w-md sm:max-w-xl">
             The heist begins soon. Prepare your crypto. 💀💰
           </p>
         </section>
+
+
       </main>
 
       {/* Footer */}
@@ -636,32 +658,37 @@ const TheYardHeist = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Twitter className="w-4 h-4" />
+                    <XIcon className="w-4 h-4" />
                   </a>
 
                 </Button>
                 <Button variant="ghost" size="sm">
-                  <Github className="w-4 h-4" />
+                  <a
+                    href="https://github.com/Albedo-momon/yard_heist"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github className="w-4 h-4" />
+                  </a>
                 </Button>
-                <Button variant="ghost" size="sm">
-                  <Mail className="w-4 h-4" />
-                </Button>
+
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
+              <h4 className="font-semibold mb-4">Contact</h4> {/* after adding other chane it to the legal */}
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p>18+ only • Gamble responsibly</p>
-                <p>Terms • Privacy • Contact</p>
-                <div className="flex items-center space-x-2 mt-4">
-                  <Globe className="w-4 h-4" />
-                  <select className="bg-transparent border-0 text-sm">
-                    <option>English</option>
-                    <option>Español</option>
-                    <option>中文</option>
-                  </select>
-                </div>
+                <Button variant="ghost" size="sm">
+                  <a
+                    href="mailto:info@yardheist.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Mail className="w-4 h-4" />
+                  </a>
+                </Button>
+                {/* <p>18+ only • Gamble responsibly</p>
+                <p>Terms • Privacy • Contact</p> */}
               </div>
             </div>
           </div>
