@@ -430,9 +430,9 @@ const TheYardHeist = () => {
 
               <Card className="p-6 bg-card/50 backdrop-blur paint-splatter-green">
                 <div className="text-3xl mb-4">💎</div>
-                <h3 className="font-semibold mb-2">Multi-Crypto Support</h3>
+                <h3 className="font-semibold mb-2">Privacy Swap</h3>
                 <p className="text-sm text-muted-foreground">
-                  ETH, BTC, USDT, and 20+ major cryptocurrencies accepted
+                  Solana and 20+ major cryptocurrencies accepted
                 </p>
               </Card>
 
