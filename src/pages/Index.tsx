@@ -96,30 +96,33 @@ const games: Game[] = [
 ];
 
 const CountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 15,
-    hours: 8,
-    minutes: 42,
-    seconds: 30
-  });
+  const calculateTimeLeft = () => {
+    // Set target date to September 4th, 2024
+    const targetDate = new Date(2024, 8, 4); // months are 0-based, so 8 is September
+    const now = new Date();
+
+    // Force the current year to 2024 for testing
+    now.setFullYear(2024);
+
+    const difference = targetDate.getTime() - now.getTime();
+
+    // Ensure we don't get negative values
+    const timeLeft = Math.max(difference, 0);
+
+    // Calculate time units
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        }
-        if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        }
-        if (prev.hours > 0) {
-          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        }
-        if (prev.days > 0) {
-          return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        }
-        return prev;
-      });
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
@@ -263,7 +266,6 @@ const ParticleBackground = () => {
 const TheYardHeist = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [whitelistProgress] = useState(73);
   const [open, setOpen] = useState(false);
 
   const handleEmailSubmit = (e: React.FormEvent) => {
@@ -391,24 +393,7 @@ const TheYardHeist = () => {
           </motion.div>
         </section>
 
-        {/* Whitelist Progress */}
-        <section className="container mx-auto px-2 py-12">
-          <Card className="max-w-2xl mx-auto bg-card/50 backdrop-blur">
-            <CardContent className="p-6">
-              <div className="text-center mb-4">
-                <h3 className="text-lg font-semibold mb-2">Whishlist Progress </h3>
-                <p className="text-sm text-muted-foreground">
-                  {whitelistProgress}% of spots filled • Get early access + bonus
-                </p>
-              </div>
-              <Progress value={whitelistProgress} className="mb-4" />
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>{whitelistProgress * 10} players joined</span>
-                <span>1000 spots total</span>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+
 
         {/* Games Showcase */}
         {/* <section className="container mx-auto px-4 py-20">
@@ -437,7 +422,7 @@ const TheYardHeist = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <Card className="p-6 bg-card/50 backdrop-blur paint-splatter-purple">
                 <div className="text-3xl mb-4">₿</div>
-                <h3 className="font-semibold mb-2">Bitcoin Ready</h3>
+                <h3 className="font-semibold mb-2">Solana Ready</h3>
                 <p className="text-sm text-muted-foreground">
                   Deposit & withdraw Bitcoin instantly with lightning-fast transactions
                 </p>
