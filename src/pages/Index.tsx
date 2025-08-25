@@ -20,6 +20,7 @@ import getawayCrashImage from "@/assets/getaway-crash.jpg";
 import shadowDiceImage from "@/assets/shadow-dice-raid.jpg";
 import highStakeImage from "@/assets/high-stake-heist.jpg";
 import cryptographImage from "@/assets/cryptograph.jpg";
+import solanaLogo from "@/assets/solana.png";
 
 interface Game {
   id: string;
@@ -421,16 +422,17 @@ const TheYardHeist = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <Card className="p-6 bg-card/50 backdrop-blur paint-splatter-purple">
-                <div className="text-3xl mb-4">₿</div>
+                <div className="mb-4">
+                  <img src={solanaLogo} alt="Solana Logo" className="w-8 h-8 mx-auto" />
+                </div>
                 <h3 className="font-semibold mb-2">Solana Ready</h3>
                 <p className="text-sm text-muted-foreground">
-                  Deposit & withdraw Bitcoin instantly with lightning-fast transactions
+                  Deposit & withdraw Solana instantly with lightning-fast transactions
                 </p>
               </Card>
 
               <Card className="p-6 bg-card/50 backdrop-blur paint-splatter-green">
-                <div className="text-3xl mb-4">💎</div>
-                <h3 className="font-semibold mb-2">Privacy Swap</h3>
+                <div className="text-3xl mb-4">💎</div>               <h3 className="font-semibold mb-2">Privacy Swap</h3>
                 <p className="text-sm text-muted-foreground">
                   Solana and 20+ major cryptocurrencies accepted
                 </p>
