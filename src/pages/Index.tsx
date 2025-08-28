@@ -20,7 +20,6 @@ import getawayCrashImage from "@/assets/getaway-crash.jpg";
 import shadowDiceImage from "@/assets/shadow-dice-raid.jpg";
 import highStakeImage from "@/assets/high-stake-heist.jpg";
 import cryptographImage from "@/assets/cryptograph.jpg";
-import solanaLogo from "@/assets/solana.png";
 
 interface Game {
   id: string;
@@ -97,33 +96,30 @@ const games: Game[] = [
 ];
 
 const CountdownTimer = () => {
-  const calculateTimeLeft = () => {
-    // Set target date to September 4th, 2024
-    const targetDate = new Date(2024, 8, 4); // months are 0-based, so 8 is September
-    const now = new Date();
-
-    // Force the current year to 2024 for testing
-    now.setFullYear(2024);
-
-    const difference = targetDate.getTime() - now.getTime();
-
-    // Ensure we don't get negative values
-    const timeLeft = Math.max(difference, 0);
-
-    // Calculate time units
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState({
+    days: 15,
+    hours: 8,
+    minutes: 42,
+    seconds: 30
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        }
+        if (prev.minutes > 0) {
+          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        }
+        if (prev.hours > 0) {
+          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        }
+        if (prev.days > 0) {
+          return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+        }
+        return prev;
+      });
     }, 1000);
 
     return () => clearInterval(timer);
@@ -265,14 +261,34 @@ const ParticleBackground = () => {
 };
 
 const TheYardHeist = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [whitelistProgress] = useState(73);
   const [open, setOpen] = useState(false);
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubscribed(true);
-    setTimeout(() => setIsSubscribed(false), 3000);
+    setSubmitError(null);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email })
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data?.message || 'Subscription failed');
+      }
+      setIsSubscribed(true);
+    } catch (err: any) {
+      setSubmitError(err?.message || 'Something went wrong');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -374,18 +390,36 @@ const TheYardHeist = () => {
                       Be the first to know when The Yard Heist launches and win rewards
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleEmailSubmit} className="space-y-4">
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                    <Button type="submit" className="w-full">
-                      {isSubscribed ? 'Subscribed!' : 'Subscribe'}
-                    </Button>
-                  </form>
+                  {isSubscribed ? (
+                    <div className="space-y-2">
+                      <p className="text-sm text-green-500">
+                        Email sent to you. We will get back to you on launch.
+                      </p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleEmailSubmit} className="space-y-4">
+                      <Input
+                        type="text"
+                        placeholder="Enter your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                      />
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                      {submitError && (
+                        <p className="text-sm text-red-500">{submitError}</p>
+                      )}
+                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? 'Submitting...' : 'Subscribe'}
+                      </Button>
+                    </form>
+                  )}
                 </DialogContent>
               </Dialog>
 
@@ -394,7 +428,24 @@ const TheYardHeist = () => {
           </motion.div>
         </section>
 
-
+        {/* Whitelist Progress */}
+        <section className="container mx-auto px-2 py-12">
+          <Card className="max-w-2xl mx-auto bg-card/50 backdrop-blur">
+            <CardContent className="p-6">
+              <div className="text-center mb-4">
+                <h3 className="text-lg font-semibold mb-2">Whishlist Progress </h3>
+                <p className="text-sm text-muted-foreground">
+                  {whitelistProgress}% of spots filled • Get early access + bonus
+                </p>
+              </div>
+              <Progress value={whitelistProgress} className="mb-4" />
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>{whitelistProgress * 10} players joined</span>
+                <span>1000 spots total</span>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
 
         {/* Games Showcase */}
         {/* <section className="container mx-auto px-4 py-20">
@@ -422,19 +473,18 @@ const TheYardHeist = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <Card className="p-6 bg-card/50 backdrop-blur paint-splatter-purple">
-                <div className="mb-4">
-                  <img src={solanaLogo} alt="Solana Logo" className="w-8 h-8 mx-auto" />
-                </div>
-                <h3 className="font-semibold mb-2">Solana Ready</h3>
+                <div className="text-3xl mb-4">₿</div>
+                <h3 className="font-semibold mb-2">Bitcoin Ready</h3>
                 <p className="text-sm text-muted-foreground">
-                  Deposit & withdraw Solana instantly with lightning-fast transactions
+                  Deposit & withdraw Bitcoin instantly with lightning-fast transactions
                 </p>
               </Card>
 
               <Card className="p-6 bg-card/50 backdrop-blur paint-splatter-green">
-                <div className="text-3xl mb-4">💎</div>               <h3 className="font-semibold mb-2">Privacy Swap</h3>
+                <div className="text-3xl mb-4">💎</div>
+                <h3 className="font-semibold mb-2">Multi-Crypto Support</h3>
                 <p className="text-sm text-muted-foreground">
-                  Solana and 20+ major cryptocurrencies accepted
+                  ETH, BTC, USDT, and 20+ major cryptocurrencies accepted
                 </p>
               </Card>
 

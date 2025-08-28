@@ -119,6 +119,7 @@
 }
 
 @layer utilities {
+
   /* Paint drip effects */
   .paint-drip-purple {
     color: var(--accent-purple);
@@ -170,99 +171,59 @@
 
   /* Paint splatter effects */
   .paint-splatter-purple {
-    box-shadow: 0 0 15px rgba(106, 13, 173, 0.4),
-      inset 0 0 10px rgba(106, 13, 173, 0.2);
+    box-shadow: 0 0 15px rgba(106, 13, 173, 0.4), inset 0 0 10px rgba(106, 13, 173, 0.2);
     border: 2px solid #6a0dad99;
     position: relative;
   }
 
   .paint-splatter-green {
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4),
-      inset 0 0 10px rgba(57, 255, 20, 0.2);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.4), inset 0 0 10px rgba(57, 255, 20, 0.2);
     border: 2px solid rgba(57, 255, 20, 0.6);
   }
 
   .paint-splatter-orange {
-    box-shadow: 0 0 15px rgba(255, 106, 0, 0.4),
-      inset 0 0 10px rgba(255, 106, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 106, 0, 0.4), inset 0 0 10px rgba(255, 106, 0, 0.2);
     border: 2px solid rgba(255, 106, 0, 0.6);
   }
 
   .paint-splatter-blue {
-    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4),
-      inset 0 0 10px rgba(0, 191, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4), inset 0 0 10px rgba(0, 191, 255, 0.2);
     border: 2px solid rgba(0, 191, 255, 0.6);
   }
 
   .paint-splatter-yellow {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4),
-      inset 0 0 10px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), inset 0 0 10px rgba(255, 215, 0, 0.2);
     border: 2px solid rgba(255, 215, 0, 0.6);
   }
 
   .paint-splatter-red {
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4),
-      inset 0 0 10px rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
     border: 2px solid rgba(255, 0, 0, 0.6);
   }
 
   /* Paint stains pattern */
   .paint-stains {
-    background-image: radial-gradient(
-        circle at 15% 20%,
-        rgba(106, 13, 173, 0.1) 8px,
-        transparent 8px
-      ),
-      radial-gradient(
-        circle at 85% 15%,
-        rgba(57, 255, 20, 0.08) 12px,
-        transparent 12px
-      ),
-      radial-gradient(
-        circle at 45% 80%,
-        rgba(255, 106, 0, 0.06) 6px,
-        transparent 6px
-      ),
-      radial-gradient(
-        circle at 75% 60%,
-        rgba(255, 0, 0, 0.08) 10px,
-        transparent 10px
-      ),
-      radial-gradient(
-        circle at 25% 70%,
-        rgba(255, 215, 0, 0.05) 14px,
-        transparent 14px
-      );
-    background-size: 400px 400px, 600px 600px, 300px 300px, 500px 500px,
-      700px 700px;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(106, 13, 173, 0.1) 8px, transparent 8px),
+      radial-gradient(circle at 85% 15%, rgba(57, 255, 20, 0.08) 12px, transparent 12px),
+      radial-gradient(circle at 45% 80%, rgba(255, 106, 0, 0.06) 6px, transparent 6px),
+      radial-gradient(circle at 75% 60%, rgba(255, 0, 0, 0.08) 10px, transparent 10px),
+      radial-gradient(circle at 25% 70%, rgba(255, 215, 0, 0.05) 14px, transparent 14px);
+    background-size: 400px 400px, 600px 600px, 300px 300px, 500px 500px, 700px 700px;
   }
 
   /* Concrete texture with paint splatters */
   .concrete-texture {
-    background-image: radial-gradient(
-        circle at 20% 50%,
-        rgba(255, 255, 255, 0.02) 1px,
-        transparent 1px
-      ),
-      radial-gradient(
-        circle at 80% 50%,
-        rgba(255, 255, 255, 0.02) 1px,
-        transparent 1px
-      ),
-      radial-gradient(
-        circle at 40% 80%,
-        rgba(255, 255, 255, 0.02) 1px,
-        transparent 1px
-      ),
-      radial-gradient(
-        ellipse at 60% 30%,
-        rgba(106, 13, 173, 0.05) 3px,
-        transparent 3px
-      );
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      radial-gradient(ellipse at 60% 30%, rgba(106, 13, 173, 0.05) 3px, transparent 3px);
   }
 
   /* Glitch animation keyframes */
   @keyframes glitch {
+
     0%,
     100% {
       transform: translate(0);
@@ -310,15 +271,15 @@
 
   @keyframes gradient {
     0% {
-      background-position: 0% 50%;
+      backgroundPosition: "0% 50%"
     }
 
     50% {
-      background-position: 100% 50%;
+      backgroundPosition: "100% 50%"
     }
 
     100% {
-      background-position: 0% 50%;
+      backgroundPosition: "0% 50%"
     }
   }
 
@@ -333,16 +294,14 @@
   }
 
   .border-animated {
-    background: linear-gradient(
-      90deg,
-      purple,
-      blue,
-      #2cc911,
-      orange,
-      yellow,
-      red,
-      purple
-    );
+    background: linear-gradient(90deg,
+        purple,
+        blue,
+        #2cc911,
+        orange,
+        yellow,
+        red,
+        purple);
     background-size: 400% 100%;
     animation: border-move 8s linear infinite;
     padding: 3px;
@@ -351,42 +310,36 @@
 
   /* Casino Game Styles */
   .casino-background {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--casino-deep-blue)) 0%,
-      hsl(var(--casino-royal-purple)) 100%
-    );
+    background: linear-gradient(135deg, hsl(var(--casino-deep-blue)) 0%, hsl(var(--casino-royal-purple)) 100%);
   }
 
   .coin-3d {
-    background: radial-gradient(
-      circle at 30% 30%,
-      hsl(var(--casino-gold)) 0%,
-      hsl(43 80% 45%) 50%,
-      hsl(43 60% 35%) 100%
-    );
+    background: radial-gradient(circle at 30% 30%,
+        hsl(var(--casino-gold)) 0%,
+        hsl(43 80% 45%) 50%,
+        hsl(43 60% 35%) 100%);
     border: 3px solid hsl(43 70% 40%);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+    box-shadow:
+      0 8px 16px rgba(0, 0, 0, 0.3),
       inset 0 2px 8px rgba(255, 255, 255, 0.3),
       inset 0 -2px 8px rgba(0, 0, 0, 0.2);
     position: relative;
   }
 
   .coin-3d-silver {
-    background: radial-gradient(
-      circle at 30% 30%,
-      hsl(var(--casino-silver)) 0%,
-      hsl(210 15% 60%) 50%,
-      hsl(210 10% 45%) 100%
-    );
+    background: radial-gradient(circle at 30% 30%,
+        hsl(var(--casino-silver)) 0%,
+        hsl(210 15% 60%) 50%,
+        hsl(210 10% 45%) 100%);
     border: 3px solid hsl(210 15% 50%);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+    box-shadow:
+      0 8px 16px rgba(0, 0, 0, 0.3),
       inset 0 2px 8px rgba(255, 255, 255, 0.4),
       inset 0 -2px 8px rgba(0, 0, 0, 0.2);
   }
 
   .coin-3d::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 10%;
     left: 20%;
@@ -420,6 +373,7 @@
   }
 
   @keyframes neon-glow {
+
     0%,
     100% {
       box-shadow: 0 0 5px hsl(var(--casino-neon-green)),
@@ -435,6 +389,7 @@
   }
 
   @keyframes sparkle {
+
     0%,
     100% {
       transform: scale(0) rotate(0deg);
@@ -464,11 +419,7 @@
   }
 
   .casino-button {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--casino-neon-green)) 0%,
-      hsl(120 80% 40%) 100%
-    );
+    background: linear-gradient(135deg, hsl(var(--casino-neon-green)) 0%, hsl(120 80% 40%) 100%);
     border: 2px solid hsl(var(--casino-neon-green));
     box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
     font-weight: bold;
@@ -480,11 +431,7 @@
   .casino-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
-    background: linear-gradient(
-      135deg,
-      hsl(120 100% 55%) 0%,
-      hsl(120 80% 45%) 100%
-    );
+    background: linear-gradient(135deg, hsl(120 100% 55%) 0%, hsl(120 80% 45%) 100%);
   }
 
   .casino-button:active {
@@ -492,11 +439,7 @@
   }
 
   .choice-highlight {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--casino-gold)) 0%,
-      hsl(43 80% 50%) 100%
-    );
+    background: linear-gradient(135deg, hsl(var(--casino-gold)) 0%, hsl(43 80% 50%) 100%);
     border: 3px solid hsl(var(--casino-gold));
     box-shadow: 0 0 20px hsl(var(--casino-gold) / 0.5);
     color: hsl(var(--casino-deep-blue));
@@ -517,13 +460,12 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: radial-gradient(
-      circle at 30% 30%,
-      hsl(var(--casino-gold)) 0%,
-      hsl(43 80% 45%) 100%
-    );
+    background: radial-gradient(circle at 30% 30%,
+        hsl(var(--casino-gold)) 0%,
+        hsl(43 80% 45%) 100%);
     border: 2px solid hsl(43 70% 40%);
     animation-delay: var(--delay, 0s);
     animation-iteration-count: infinite;
   }
+
 }
