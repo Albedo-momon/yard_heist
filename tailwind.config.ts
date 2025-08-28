@@ -61,6 +61,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				casino: {
+					gold: 'hsl(var(--casino-gold))',
+					silver: 'hsl(var(--casino-silver))',
+					'deep-blue': 'hsl(var(--casino-deep-blue))',
+					'neon-green': 'hsl(var(--casino-neon-green))',
+					'royal-purple': 'hsl(var(--casino-royal-purple))'
 				}
 			},
 			borderRadius: {
