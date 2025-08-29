@@ -69,7 +69,9 @@ const CoinToss: React.FC = () => {
   };
 
   const handleQuickChip = (amount: number) => {
-    setBetAmount(amount.toString());
+    if (amount > 0) {
+      setBetAmount(amount.toString());
+    }
   };
 
 
@@ -210,7 +212,7 @@ const CoinToss: React.FC = () => {
 
 
           {/* Betting panel/content above bg */}
-          <div className="relative w-full z-10 flex flex-col items-center justify-center md:gap-20 md:min-h-[80vh] md:h-4/5 py-8 md:py-0">
+          <div className="relative w-full z-10 flex flex-col items-center justify-center md:gap-20 md:min-h-[80vh] md:h-4/5 py-8 md:py-0 md:mb-20">
 
             <div className="relative z-10">
 
@@ -511,7 +513,7 @@ const CoinToss: React.FC = () => {
                       <Button
                         onClick={simulateFlip}
                         disabled={!betAmount || parseInt(betAmount) <= 0 || !prediction || isFlipping}
-                        className="w-full md:w-40 text-xl md:text-2xl font-black tracking-widest 
+                        className="w-full md:w-60 text-xl md:text-2xl font-black tracking-widest 
               bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 
               text-black hover:from-yellow-500 hover:via-yellow-400 hover:to-yellow-600 
               shadow-2xl shadow-yellow-500/40 transition-all duration-300 
@@ -526,7 +528,7 @@ const CoinToss: React.FC = () => {
                             >
                               <Coins className="w-8 h-8" />
                             </motion.div>
-                            <span className="tracking-widest">FLIPPING...</span>
+                            <span className="tracking-widest">FLIPPING</span>
                           </div>
                         ) : (
                           <div className="flex items-center gap-4">
@@ -706,7 +708,12 @@ const CoinToss: React.FC = () => {
         <AnimatePresence>
           {
             showResultDialog && gameResult && (
-              <Dialog open={showResultDialog} onOpenChange={setShowResultDialog}>
+              <Dialog open={showResultDialog} onOpenChange={(open) => {
+                if (!open) {
+                  playAgain();
+                }
+                setShowResultDialog(open);
+              }}>
                 <DialogContent className="bg-gradient-to-br from-casino-deep-blue via-black to-casino-royal-purple border-2 border-casino-gold max-w-md backdrop-blur-md">
                   <motion.div
                     initial={{ scale: 0.7, opacity: 0, rotateY: -180 }}
@@ -806,7 +813,7 @@ const CoinToss: React.FC = () => {
                           FLIP AGAIN
                         </Button>
                         <Button
-                          onClick={() => setShowResultDialog(false)}
+                          onClick={playAgain}
                           variant="outline"
                           className="border-casino-silver text-casino-silver hover:bg-casino-silver hover:text-casino-deep-blue px-8 py-3 font-bold"
                         >
