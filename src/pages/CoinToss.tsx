@@ -30,7 +30,7 @@ const CoinToss: React.FC = () => {
   const [winRate, setWinRate] = useState(68.4);
   const [flipTarget, setFlipTarget] = useState<'H' | 'T' | null>(null);
   const [coinTargets, setCoinTargets] = useState<Array<'H' | 'T'>>([]);
-  const FLIP_DURATION_S = 4;
+  const FLIP_DURATION_S = 3;
   const POPUP_DELAY_S = 0.35;
   const [numCoins, setNumCoins] = useState<number>(1);
   const [numChoice, setNumChoice] = useState<number>(1);
@@ -113,16 +113,15 @@ const CoinToss: React.FC = () => {
     }
 
     if (gameResult) {
-      return gameResult.result;
+      // After game result, show the actual flip results for each individual coin
+      return coins[idx]?.currentFace || 'H';
     }
 
-    if (prediction) {
-      // Calculate how many coins should show the predicted face
-      const totalCoins = Math.min(10, Math.max(1, numCoins));
+    if (prediction && idx < numCoins) {
+      // Show prediction visually: first numChoice coins show predicted face, rest show opposite
       const predictedFace = prediction === 'Heads' ? 'H' : 'T';
       const oppositeFace = prediction === 'Heads' ? 'T' : 'H';
 
-      // First 'numChoice' coins show the predicted face, rest show opposite
       if (idx < numChoice) {
         return predictedFace;
       } else {
@@ -130,7 +129,18 @@ const CoinToss: React.FC = () => {
       }
     }
 
-    return 'H'; // default fallback
+    // If no prediction, show the coin's current random face
+    return coins[idx]?.currentFace || 'H';
+  };
+
+  // Function to determine what face to show during flipping (for visual effect)
+  const getFlippingFace = (idx: number): 'H' | 'T' => {
+    if (isFlipping) {
+      // During flipping, we'll show both faces through CSS transforms
+      // Return the current face, but the animation will handle the 3D rotation
+      return getCoinFace(idx);
+    }
+    return getCoinFace(idx);
   };
 
   const simulateFlip = async () => {
@@ -150,7 +160,10 @@ const CoinToss: React.FC = () => {
     // Let the animation play (fast then slow easing handled by transition below)
     await new Promise(resolve => setTimeout(resolve, FLIP_DURATION_S * 1000));
 
-    const won = (prediction === 'Heads' && result === 'H') || (prediction === 'Tails' && result === 'T');
+    // Calculate win based on how many coins match the prediction
+    const predictedFace = prediction === 'Heads' ? 'H' : 'T';
+    const matchingCoins = results.slice(0, numCoins).filter(r => r === predictedFace).length;
+    const won = matchingCoins === numChoice;
     const bet = parseInt(betAmount);
     const payout = won ? bet * selectedRatio.multiplier : -bet;
 
@@ -166,15 +179,20 @@ const CoinToss: React.FC = () => {
       setWinRate(prev => Math.max(0.1, prev - 0.1));
     }
 
-    // After animation timeout finishes
+    // After animation timeout finishes, only update the flipped coins with their individual results
     setCoins((prevCoins) =>
-      prevCoins.map((coin, idx) => ({
-        ...coin,
-        currentFace: coinTargets[idx],
-      }))
+      prevCoins.map((coin, idx) => {
+        if (idx < numCoins && coinTargets[idx]) {
+          // Only update the coins that were actually flipped with their individual results
+          return {
+            ...coin,
+            currentFace: coinTargets[idx],
+          };
+        }
+        // Keep other coins unchanged
+        return coin;
+      })
     );
-
-    setCoinTargets([]);  // clear flip targets to fall back coins state
     setIsFlipping(false);
     // small pause after the coin settles before showing popup
     setTimeout(() => setShowResultDialog(true), POPUP_DELAY_S * 1000);
@@ -185,6 +203,15 @@ const CoinToss: React.FC = () => {
     setPrediction(null);
     setShowResultDialog(false);
     setCoinTargets([]);
+
+    // Reset coins to default faces (heads) for the next game
+    setCoins(Array(10)
+      .fill(null)
+      .map(() => ({
+        currentFace: "H",
+        isFlipping: false,
+      }))
+    );
   };
 
 
@@ -281,49 +308,63 @@ const CoinToss: React.FC = () => {
                     const topCount = total <= 3 ? total : Math.ceil(total / 2);
                     const bottomCount = total <= 3 ? 0 : (total - topCount);
                     return (
-                      <div className="flex flex-col items-center gap-6">
+                      <div className="flex flex-col items-center gap-6" style={{ perspective: '1200px' }}>
                         <div className="flex justify-center gap-2 md:gap-6">
                           {Array.from({ length: topCount }).map((_, i) => {
                             return (<motion.div
                               key={i}
                               className={`${coinSizeClass} rounded-full relative cursor-pointer shadow-2xl`}
-                              style={{ transformStyle: 'preserve-3d' as any }}
+                              style={{
+                                transformStyle: 'preserve-3d' as any,
+                                perspective: '1000px',
+                                transform: 'translateZ(0)'
+                              }}
                               initial={{ scale: 0.8, opacity: 0, y: -10 }}
                               animate={{
                                 scale: 1,
                                 opacity: 1,
                                 y: 0,
                                 rotateY: isFlipping
-                                  ? (360 * 3) + ((coinTargets[i] || flipTarget) === 'T' ? 180 : 0)
+                                  ? (360 * 4) + ((coinTargets[i] || flipTarget) === 'T' ? 180 : 0)
                                   : (gameResult
                                     ? (gameResult.result === 'T' ? 180 : 0)
-                                    : (prediction === 'Tails' ? 180 : 0))
+                                    : (getCoinFace(i) === 'T' ? 180 : 0))
                               }}
                               onClick={simulateFlip}
                               transition={{
                                 duration: isFlipping ? FLIP_DURATION_S : (gameResult ? 0 : 0.6),
-                                ease: isFlipping ? [0.15, 0.85, 0.25, 1] : 'easeOut',
+                                ease: isFlipping ? [0.25, 0.46, 0.45, 0.94] : 'easeOut',
                                 repeat: 0,
                                 delay: isFlipping ? i * 0.08 : 0
                               }}
                             >
+                              {/* Front face - always show heads */}
                               <div
-                                className="absolute inset-0  flex items-center justify-center overflow-hidden"
-                                style={{ backfaceVisibility: 'hidden' }}
+                                className="absolute inset-0 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backfaceVisibility: 'hidden',
+                                  transform: 'translateZ(2px)',
+                                  boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+                                }}
                               >
                                 <img
-                                  src={getCoinFace(i) === 'H' ? headImg : tailImg}
-                                  alt={getCoinFace(i) === 'H' ? 'Heads' : 'Tails'}
+                                  src={headImg}
+                                  alt="Heads"
                                   className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                 />
                               </div>
+                              {/* Back face - always show tails */}
                               <div
                                 className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden"
-                                style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+                                style={{
+                                  transform: 'rotateY(180deg) translateZ(2px)',
+                                  backfaceVisibility: 'hidden',
+                                  boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+                                }}
                               >
                                 <img
-                                  src={getCoinFace(i) === 'T' ? tailImg : headImg}
-                                  alt={getCoinFace(i) === 'T' ? 'Tails' : 'Heads'}
+                                  src={tailImg}
+                                  alt="Tails"
                                   className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                 />
                               </div>
@@ -338,43 +379,57 @@ const CoinToss: React.FC = () => {
                               return (<motion.div
                                 key={j}
                                 className={`${coinSizeClass} rounded-full relative cursor-pointer shadow-2xl`}
-                                style={{ transformStyle: 'preserve-3d' as any }}
+                                style={{
+                                  transformStyle: 'preserve-3d' as any,
+                                  perspective: '1000px',
+                                  transform: 'translateZ(0)'
+                                }}
                                 initial={{ scale: 0.8, opacity: 0, y: 10 }}
                                 animate={{
                                   scale: 1,
                                   opacity: 1,
                                   y: 0,
                                   rotateY: isFlipping
-                                    ? (360 * 3) + ((coinTargets[topCount + j] || flipTarget) === 'T' ? 180 : 0)
+                                    ? (360 * 4) + ((coinTargets[topCount + j] || flipTarget) === 'T' ? 180 : 0)
                                     : (gameResult
                                       ? (gameResult.result === 'T' ? 180 : 0)
-                                      : (prediction === 'Tails' ? 180 : 0))
+                                      : (getCoinFace(topCount + j) === 'T' ? 180 : 0))
                                 }}
                                 onClick={simulateFlip}
                                 transition={{
                                   duration: isFlipping ? FLIP_DURATION_S : (gameResult ? 0 : 0.6),
-                                  ease: isFlipping ? [0.15, 0.85, 0.25, 1] : 'easeOut',
+                                  ease: isFlipping ? [0.25, 0.46, 0.45, 0.94] : 'easeOut',
                                   repeat: 0,
                                   delay: isFlipping ? (topCount + j) * 0.08 : 0
                                 }}
                               >
+                                {/* Front face - always show heads */}
                                 <div
                                   className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden"
-                                  style={{ backfaceVisibility: 'hidden' }}
+                                  style={{
+                                    backfaceVisibility: 'hidden',
+                                    transform: 'translateZ(2px)',
+                                    boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+                                  }}
                                 >
                                   <img
-                                    src={getCoinFace(topCount + j) === 'H' ? headImg : tailImg}
-                                    alt={getCoinFace(topCount + j) === 'H' ? 'Heads' : 'Tails'}
+                                    src={headImg}
+                                    alt="Heads"
                                     className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                   />
                                 </div>
+                                {/* Back face - always show tails */}
                                 <div
                                   className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden"
-                                  style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+                                  style={{
+                                    transform: 'rotateY(180deg) translateZ(2px)',
+                                    backfaceVisibility: 'hidden',
+                                    boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+                                  }}
                                 >
                                   <img
-                                    src={getCoinFace(topCount + j) === 'T' ? tailImg : headImg}
-                                    alt={getCoinFace(topCount + j) === 'T' ? 'Tails' : 'Heads'}
+                                    src={tailImg}
+                                    alt="Tails"
                                     className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                   />
                                 </div>
