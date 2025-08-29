@@ -23,6 +23,8 @@ const CoinToss: React.FC = () => {
     result: 'H' | 'T';
     won: boolean;
     payout: number;
+    finalResults?: Array<'H' | 'T'>;
+    actualCount?: number;
   } | null>(null);
   const [showResultDialog, setShowResultDialog] = useState(false);
   const [winStreak, setWinStreak] = useState(3);
@@ -164,10 +166,30 @@ const CoinToss: React.FC = () => {
     const predictedFace = prediction === 'Heads' ? 'H' : 'T';
     const matchingCoins = results.slice(0, numCoins).filter(r => r === predictedFace).length;
     const won = matchingCoins === numChoice;
+
+    // Debug logging
+    console.log('Debug Info:', {
+      prediction,
+      predictedFace,
+      numCoins,
+      numChoice,
+      results: results.slice(0, numCoins),
+      matchingCoins,
+      won
+    });
+
+    // Store the results for display in the popup
+    const finalResults = results.slice(0, numCoins);
     const bet = parseInt(betAmount);
     const payout = won ? bet * selectedRatio.multiplier : -bet;
 
-    setGameResult({ result, won, payout });
+    setGameResult({
+      result,
+      won,
+      payout,
+      finalResults,
+      actualCount: matchingCoins
+    });
     setWallet(prev => prev + payout);
     setTotalGames(prev => prev + 1);
 
@@ -845,29 +867,7 @@ const CoinToss: React.FC = () => {
                     </DialogHeader>
 
                     <div className="text-center space-y-6 py-8">
-                      {/* Coin Result with Animation */}
-                      <motion.div
-                        initial={{ rotateY: 0, scale: 0 }}
-                        animate={{
-                          rotateY: gameResult.result === 'H' ? 0 : 180,
-                          scale: 1
-                        }}
-                        transition={{
-                          duration: 0.8,
-                          delay: 0.3,
-                          type: "spring",
-                          stiffness: 100
-                        }}
-                        className="flex justify-center"
-                      >
-                        <div className="w-32 h-32 rounded-full relative shadow-2xl overflow-hidden">
-                          {gameResult.result === 'H' ? (
-                            <img src={headImg} alt="Heads" className="w-full h-full object-cover" />
-                          ) : (
-                            <img src={tailImg} alt="Tails" className="w-full h-full object-cover" />
-                          )}
-                        </div>
-                      </motion.div>
+
 
                       {/* Result Details */}
                       <motion.div
@@ -877,13 +877,18 @@ const CoinToss: React.FC = () => {
                         transition={{ delay: 0.5 }}
                       >
                         <p className="text-casino-silver text-lg">
-                          Result: <span className="font-bold text-casino-gold text-xl">
-                            {gameResult.result === 'H' ? 'HEADS' : 'TAILS'}
+                          Actual Result: <span className="font-bold text-casino-gold text-xl">
+                            {gameResult.actualCount} {prediction?.toUpperCase()}
                           </span>
                         </p>
                         <p className="text-casino-silver text-lg">
-                          Your Choice: <span className="font-bold text-casino-neon-green text-xl">
-                            {prediction?.toUpperCase()}
+                          Your Prediction: <span className="font-bold text-casino-neon-green text-xl">
+                            {numChoice} {prediction?.toUpperCase()}
+                          </span>
+                        </p>
+                        <p className="text-casino-silver text-lg">
+                          Out of: <span className="font-bold text-casino-silver text-xl">
+                            {numCoins} COINS
                           </span>
                         </p>
                       </motion.div>
