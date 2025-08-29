@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Wallet, Plus, TrendingUp, Coins, Zap, Trophy, Target, ArrowLeft, Flame, UserRound } from 'lucide-react';
+
+import { Wallet, TrendingUp, Coins, Zap, Trophy, Target, UserRound } from 'lucide-react';
 import headImg from "@/assets/head.png";
 import tailImg from "@/assets/tail.png";
 import logo from "@/assets/logo-yardhiest.jpg";
@@ -35,6 +35,25 @@ const CoinToss: React.FC = () => {
   const [numCoins, setNumCoins] = useState<number>(1);
   const [numChoice, setNumChoice] = useState<number>(1);
 
+  type CoinType = {
+    currentFace: "H" | "T";
+    isFlipping?: boolean;
+    flipTarget?: "H" | "T";
+    gameResult?: {
+      result: "H" | "T";
+    };
+  };
+
+  // Initialize with 10 coins, each with a random initial face
+  const initialCoinsArray: CoinType[] = Array(10)
+    .fill(null)
+    .map(() => ({
+      currentFace: Math.random() < 0.5 ? "H" : "T",
+      isFlipping: false,
+    }));
+
+  // In your component, useState with this initial array
+  const [coins, setCoins] = useState<Array<CoinType>>(initialCoinsArray);
 
   // Betting ratios with their multipliers
   const bettingRatios = [
@@ -75,23 +94,44 @@ const CoinToss: React.FC = () => {
   };
 
 
-  const getCurrentFace = (): 'H' | 'T' => {
-    if (isFlipping && flipTarget) return flipTarget;
-    if (gameResult) return gameResult.result;
-    return prediction === 'Tails' ? 'T' : 'H';
+
+  const getCurrentFace = (idx: number): 'H' | 'T' => {
+    const coin = coins[idx];
+
+    if (!coin) return "H"; // fallback to Heads if undefined (safe guard)
+
+    if (coin.isFlipping && coin.flipTarget) return coin.flipTarget;
+    if (coin.gameResult) return coin.gameResult.result;
+
+    return coin.currentFace;
   };
-  const coinImage = getCurrentFace() === "T" ? tailImg : headImg;
 
-  const coinGlowShadow = getCurrentFace() === 'T'
-    ? '0 0 12px rgba(192,192,192,0.35), 0 0 24px rgba(192,192,192,0.2)'
-    : '0 0 12px rgba(212,175,55,0.35), 0 0 24px rgba(212,175,55,0.2)';
+  // Function to determine what face each coin should show based on prediction and numChoice
+  const getCoinFace = (idx: number): 'H' | 'T' => {
+    if (isFlipping && coinTargets[idx]) {
+      return coinTargets[idx];
+    }
 
-  // Coin size scales with count: larger up to 3, smaller beyond
-  const coinSizeClass = numCoins <= 3 ? 'w-24 h-24 md:w-36 md:h-36' : 'w-16 h-16 md:w-28 md:h-28';
+    if (gameResult) {
+      return gameResult.result;
+    }
 
-  const selectionGoldGlow = '0 0 10px rgba(212,175,55,0.35), 0 0 18px rgba(212,175,55,0.2)';
-  const selectionSilverGlow = '0 0 10px rgba(192,192,192,0.35), 0 0 18px rgba(192,192,192,0.2)';
-  const selectionNeutralGlow = '0 0 6px rgba(255,255,255,0.07)';
+    if (prediction) {
+      // Calculate how many coins should show the predicted face
+      const totalCoins = Math.min(10, Math.max(1, numCoins));
+      const predictedFace = prediction === 'Heads' ? 'H' : 'T';
+      const oppositeFace = prediction === 'Heads' ? 'T' : 'H';
+
+      // First 'numChoice' coins show the predicted face, rest show opposite
+      if (idx < numChoice) {
+        return predictedFace;
+      } else {
+        return oppositeFace;
+      }
+    }
+
+    return 'H'; // default fallback
+  };
 
   const simulateFlip = async () => {
     if (isFlipping || !betAmount || parseInt(betAmount) <= 0 || !prediction) return;
@@ -126,6 +166,15 @@ const CoinToss: React.FC = () => {
       setWinRate(prev => Math.max(0.1, prev - 0.1));
     }
 
+    // After animation timeout finishes
+    setCoins((prevCoins) =>
+      prevCoins.map((coin, idx) => ({
+        ...coin,
+        currentFace: coinTargets[idx],
+      }))
+    );
+
+    setCoinTargets([]);  // clear flip targets to fall back coins state
     setIsFlipping(false);
     // small pause after the coin settles before showing popup
     setTimeout(() => setShowResultDialog(true), POPUP_DELAY_S * 1000);
@@ -138,10 +187,13 @@ const CoinToss: React.FC = () => {
     setCoinTargets([]);
   };
 
-  const resetBet = () => {
-    setBetAmount('');
-    setPrediction(null);
-  };
+
+
+  // Coin size scales with count: larger up to 3, smaller beyond
+  const coinSizeClass = numCoins <= 3 ? 'w-24 h-24 md:w-36 md:h-36' : 'w-16 h-16 md:w-28 md:h-28';
+
+  const selectionGoldGlow = '0 0 10px rgba(212,175,55,0.35), 0 0 18px rgba(212,175,55,0.2)';
+  const selectionSilverGlow = '0 0 10px rgba(192,192,192,0.35), 0 0 18px rgba(192,192,192,0.2)';
 
   return (
     <div className=" relative overflow-hidden">
@@ -231,11 +283,11 @@ const CoinToss: React.FC = () => {
                     return (
                       <div className="flex flex-col items-center gap-6">
                         <div className="flex justify-center gap-2 md:gap-6">
-                          {Array.from({ length: topCount }).map((_, i) => (
-                            <motion.div
-                              key={`top-${i}`}
+                          {Array.from({ length: topCount }).map((_, i) => {
+                            return (<motion.div
+                              key={i}
                               className={`${coinSizeClass} rounded-full relative cursor-pointer shadow-2xl`}
-                              style={{ transformStyle: 'preserve-3d' as any, boxShadow: coinGlowShadow }}
+                              style={{ transformStyle: 'preserve-3d' as any }}
                               initial={{ scale: 0.8, opacity: 0, y: -10 }}
                               animate={{
                                 scale: 1,
@@ -260,8 +312,8 @@ const CoinToss: React.FC = () => {
                                 style={{ backfaceVisibility: 'hidden' }}
                               >
                                 <img
-                                  src={isFlipping ? headImg : ((coinTargets[i] || (prediction === 'Tails' ? 'T' : 'H')) === 'H' ? headImg : tailImg)}
-                                  alt={(coinTargets[i] || (prediction === 'Tails' ? 'T' : 'H')) === 'H' ? 'Heads' : 'Tails'}
+                                  src={getCoinFace(i) === 'H' ? headImg : tailImg}
+                                  alt={getCoinFace(i) === 'H' ? 'Heads' : 'Tails'}
                                   className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                 />
                               </div>
@@ -270,21 +322,23 @@ const CoinToss: React.FC = () => {
                                 style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
                               >
                                 <img
-                                  src={isFlipping ? tailImg : ((coinTargets[i] || (prediction === 'Tails' ? 'T' : 'H')) === 'T' ? tailImg : headImg)}
-                                  alt={(coinTargets[i] || (prediction === 'Tails' ? 'T' : 'H')) === 'T' ? 'Tails' : 'Heads'}
+                                  src={getCoinFace(i) === 'T' ? tailImg : headImg}
+                                  alt={getCoinFace(i) === 'T' ? 'Tails' : 'Heads'}
                                   className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                 />
                               </div>
                             </motion.div>
-                          ))}
+                            );
+                          })}
                         </div>
                         {bottomCount > 0 && (
                           <div className="flex justify-center gap-2 md:gap-6">
-                            {Array.from({ length: bottomCount }).map((_, j) => (
-                              <motion.div
-                                key={`bot-${j}`}
+                            {Array.from({ length: bottomCount }).map((_, j) => {
+                              const idx = topCount + j;
+                              return (<motion.div
+                                key={j}
                                 className={`${coinSizeClass} rounded-full relative cursor-pointer shadow-2xl`}
-                                style={{ transformStyle: 'preserve-3d' as any, boxShadow: coinGlowShadow }}
+                                style={{ transformStyle: 'preserve-3d' as any }}
                                 initial={{ scale: 0.8, opacity: 0, y: 10 }}
                                 animate={{
                                   scale: 1,
@@ -309,8 +363,8 @@ const CoinToss: React.FC = () => {
                                   style={{ backfaceVisibility: 'hidden' }}
                                 >
                                   <img
-                                    src={isFlipping ? headImg : ((coinTargets[topCount + j] || 'H') === 'H' ? headImg : tailImg)}
-                                    alt={(coinTargets[topCount + j] || 'H') === 'H' ? 'Heads' : 'Tails'}
+                                    src={getCoinFace(topCount + j) === 'H' ? headImg : tailImg}
+                                    alt={getCoinFace(topCount + j) === 'H' ? 'Heads' : 'Tails'}
                                     className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                   />
                                 </div>
@@ -319,15 +373,17 @@ const CoinToss: React.FC = () => {
                                   style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
                                 >
                                   <img
-                                    src={isFlipping ? tailImg : ((coinTargets[topCount + j] || 'H') === 'T' ? tailImg : headImg)}
-                                    alt={(coinTargets[topCount + j] || 'H') === 'T' ? 'Tails' : 'Heads'}
+                                    src={getCoinFace(topCount + j) === 'T' ? tailImg : headImg}
+                                    alt={getCoinFace(topCount + j) === 'T' ? 'Tails' : 'Heads'}
                                     className={`${coinSizeClass} rounded-full object-cover select-none pointer-events-none`}
                                   />
                                 </div>
                               </motion.div>
-                            ))}
+                              );
+                            })}
                           </div>
-                        )}
+                        )
+                        }
                       </div>
                     );
                   })()}
@@ -553,10 +609,6 @@ const CoinToss: React.FC = () => {
 
                   </CardContent>
                 </Card>
-
-
-
-
 
 
 
@@ -831,7 +883,7 @@ const CoinToss: React.FC = () => {
           }
         </AnimatePresence>
       </div>
-    </div>
+    </div >
   );
 };
 
