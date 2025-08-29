@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Wallet, Plus, TrendingUp, Coins, Zap, Trophy, Target, ArrowLeft, Flame } from 'lucide-react';
+import { Wallet, Plus, TrendingUp, Coins, Zap, Trophy, Target, ArrowLeft, Flame, UserRound } from 'lucide-react';
 import headImg from "@/assets/head.png";
 import tailImg from "@/assets/tail.png";
 import logo from "@/assets/logo-yardhiest.jpg";
@@ -175,26 +175,29 @@ const CoinToss: React.FC = () => {
       <div className="relative z-10 ">
 
         {/* Header */}
-        <div className="flex items-center justify-between p-2 md:p-6 border-b border-casino-gold/20 backdrop-blur-sm">
+        <div className="flex items-center justify-between  border-b border-casino-gold/20 backdrop-blur-sm">
 
-          <Button
-            variant="ghost"
+          <div
             onClick={() => window.history.back()}
-            className="text-casino-gold hover:text-black font-bold text-lg"
+            className="text-casino-gold hover:text-black font-bold text-lg flex items-center gap-2 md:ml-10 cursor-pointer h-fit"
           >
             <img src={logo} alt="logo" className="w-10 h-10 md:w-16 md:h-16 " />
             <img src={websitename} alt="website name" className="w-15 h-10 md:w-24 md:h-24" />
-          </Button>
+          </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
             {/* Wallet */}
             <Card className="bg-gradient-to-r from-casino-gold/20 to-casino-silver/20 border-casino-gold/50 backdrop-blur-sm">
               <CardContent className="flex items-center gap-3 p-2 md:p-3 ">
                 <Wallet className="w-5 h-5 text-casino-gold" />
-                <div className="text-casino-gold font-bold text-sm md:text-lg hidden">₡{wallet.toLocaleString()}</div>
+                <div className="text-casino-gold font-bold text-sm md:text-lg hidden md:block">₡{wallet.toLocaleString()}</div>
               </CardContent>
             </Card>
+            <div className='flex items-center bg-gradient-to-r p-2 rounded-lg md:bg-none from-casino-gold/20 to-casino-silver/20 border border-casino-gold/50 md:border-none backdrop-blur-sm'>
+              <UserRound className="w-5 h-5 md:w-10 md:h-10 text-casino-gold" />
+            </div>
           </div>
+
         </div>
 
 
