@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import logoName from "@/assets/background-removed.png";
-import { XIcon, GithubIcon, Instagram, Youtube, Mail } from "lucide-react";
+import { XIcon, GithubIcon, Instagram, Youtube, Mail, ChevronDown, ChevronUp } from "lucide-react";
 
 const Footer = () => {
+  const [isQuickLinksOpen, setIsQuickLinksOpen] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+
   return (
     <footer className="bg-black border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -32,29 +36,94 @@ const Footer = () => {
               </Button>
             </div>
           </div>
+          <div></div>
 
           {/* Quick Links */}
           <div className="text-center sm:text-left">
-            <h4 className="font-semibold text-foreground mb-4 text-base sm:text-lg">Quick Links</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Games</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Promotions</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">VIP Program</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Tournaments</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Leaderboard</a></li>
-            </ul>
+            {/* Mobile dropdown header */}
+            <div className="sm:hidden">
+              <button
+                onClick={() => setIsQuickLinksOpen(!isQuickLinksOpen)}
+                className="flex items-center justify-between w-full font-semibold text-foreground mb-4 text-base hover:text-primary transition-colors duration-200 active:scale-95"
+              >
+                Quick Links
+                <div className="transition-transform duration-300 ease-in-out">
+                  {isQuickLinksOpen ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </div>
+              </button>
+              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isQuickLinksOpen
+                ? 'max-h-48 opacity-100 mb-4'
+                : 'max-h-0 opacity-0 mb-0'
+                }`}>
+                <ul className="space-y-3 pb-2">
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Games</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Promotions</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">VIP Program</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Tournaments</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Leaderboard</a></li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Desktop/tablet view (always visible) */}
+            <div className="hidden sm:block">
+              <h4 className="font-semibold text-foreground mb-4 text-base sm:text-lg">Quick Links</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Games</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Promotions</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">VIP Program</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Tournaments</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Leaderboard</a></li>
+              </ul>
+            </div>
           </div>
 
           {/* Support */}
-          <div className="text-center sm:text-left">
-            <h4 className="font-semibold text-foreground mb-4 text-base sm:text-lg">Support</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Help Center</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Contact Us</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Live Chat</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Security</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Fair Play</a></li>
-            </ul>
+          <div className="text-center sm:text-left flex flex-col    ">
+            {/* Mobile dropdown header */}
+            <div className="sm:hidden">
+              <button
+                onClick={() => setIsSupportOpen(!isSupportOpen)}
+                className="flex items-center justify-between w-full font-semibold text-foreground mb-4 text-base hover:text-primary transition-colors duration-200 active:scale-95"
+              >
+                Support
+                <div className="transition-transform duration-300 ease-in-out">
+                  {isSupportOpen ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </div>
+              </button>
+              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isSupportOpen
+                ? 'max-h-48 opacity-100 mb-6'
+                : 'max-h-0 opacity-0 mb-0'
+                }`}>
+                <ul className="space-y-3 pb-2">
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Help Center</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Contact Us</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Live Chat</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Security</a></li>
+                  <li><a href="#" className="block text-muted-foreground hover:text-primary transition-colors text-sm py-1">Fair Play</a></li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Desktop/tablet view (always visible) */}
+            <div className="hidden sm:block">
+              <h4 className="font-semibold text-foreground mb-4 text-base sm:text-lg">Support</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Help Center</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Contact Us</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Live Chat</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Security</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm sm:text-base">Fair Play</a></li>
+              </ul>
+            </div>
           </div>
 
           {/* Newsletter */}

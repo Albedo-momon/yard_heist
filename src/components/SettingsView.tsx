@@ -283,17 +283,11 @@ const SettingsView = () => {
 
     return (
         <>
-            <Card className="bg-card border-border">
-                <div className="p-6">
-                    {/* Header */}
-                    <div className="flex mb-6">
-                        <Button className="border-green-500 text-black hover:bg-green-500/10 hover:text-green-300">
-                            Settings
-                        </Button>
-                    </div>
+            <Card className="bg-card border-border w-full max-w-full overflow-hidden">
+                <div className="p-4 sm:p-6 w-full max-w-full">
 
-                    {/* Settings Table */}
-                    <div className="border border-gray-700 rounded-lg overflow-hidden">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block border border-gray-700 rounded-lg overflow-hidden">
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-gray-700 hover:bg-transparent">
@@ -356,7 +350,7 @@ const SettingsView = () => {
                                                             (setting.id === "profile-picture" && loadingStates.profilePic)
                                                         }
                                                         className={`
-                                                            ${action.label.includes("Verify")
+                                                        ${action.label.includes("Verify")
                                                                 ? action.disabled
                                                                     ? "border-green-500 text-green-400 bg-green-500/10"
                                                                     : "border-green-500 text-green-400 hover:bg-green-500/10"
@@ -364,7 +358,7 @@ const SettingsView = () => {
                                                                     ? "border-red-500 text-red-400 hover:bg-red-500/10"
                                                                     : "border-blue-500 text-blue-400 hover:bg-blue-500/10"
                                                             }
-                                                        `}
+                                                    `}
                                                     >
                                                         {((setting.id === "email" && loadingStates.email) ||
                                                             (setting.id === "profile-picture" && loadingStates.profilePic))
@@ -378,50 +372,187 @@ const SettingsView = () => {
                             </TableBody>
                         </Table>
                     </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-3 w-full">
+                        {settingsData.map((setting) => (
+                            <div
+                                key={setting.id}
+                                className="bg-gray-800/40 border border-gray-600/50 rounded-xl p-3 backdrop-blur-sm w-full max-w-full overflow-hidden"
+                            >
+                                {/* Special layout for email card with two rows */}
+                                {setting.id === "email" ? (
+                                    <div className="space-y-2">
+                                        {/* First row: Icon + Label + Email */}
+                                        <div className="flex items-center gap-2">
+                                            {setting.icon && (
+                                                <span className="text-base flex-shrink-0">{setting.icon}</span>
+                                            )}
+                                            <div className="flex-1 min-w-0 overflow-hidden">
+                                                <div className="text-white font-medium text-sm truncate">
+                                                    {setting.label}
+                                                </div>
+                                                <div className="text-gray-400 text-xs truncate">
+                                                    {setting.value}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* Second row: Action buttons */}
+                                        <div className="flex gap-2 justify-end">
+                                            {setting.actions && setting.actions.map((action, index) => (
+                                                <Button
+                                                    key={index}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={action.onClick}
+                                                    disabled={
+                                                        action.disabled ||
+                                                        loadingStates.email
+                                                    }
+                                                    className={`text-xs px-3 py-1 whitespace-nowrap ${action.label.includes("Verify")
+                                                        ? action.disabled
+                                                            ? "border-green-500 text-green-400 bg-green-500/10"
+                                                            : "border-green-500 text-green-400 hover:bg-green-500/10"
+                                                        : "border-blue-500 text-blue-400 hover:bg-blue-500/10"
+                                                        }`}
+                                                >
+                                                    {loadingStates.email ? "..." : action.label}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    /* Single row layout for all other cards */
+                                    <div className="flex items-center justify-between gap-2 w-full min-w-0">
+                                        {/* Left side: Icon + Label */}
+                                        <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
+                                            {setting.type === "image" ? (
+                                                <Avatar className="h-7 w-7 flex-shrink-0">
+                                                    <AvatarImage src={setting.value as string} alt="Profile" />
+                                                    <AvatarFallback>👤</AvatarFallback>
+                                                </Avatar>
+                                            ) : (
+                                                setting.icon && (
+                                                    <span className="text-base flex-shrink-0">{setting.icon}</span>
+                                                )
+                                            )}
+                                            <div className="flex-1 min-w-0 overflow-hidden">
+                                                <div className="text-white font-medium text-sm truncate">
+                                                    {setting.label}
+                                                </div>
+                                                {setting.type === "input" && setting.value && (
+                                                    <div className="text-gray-400 text-xs truncate">
+                                                        {setting.value}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Right side: Controls + Actions */}
+                                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                                            {/* Toggle */}
+                                            {setting.type === "toggle" && (
+                                                <Switch
+                                                    checked={setting.value as boolean}
+                                                    onCheckedChange={setting.onToggleChange}
+                                                    className="data-[state=checked]:bg-green-500"
+                                                    disabled={loadingStates.hiddenBets}
+                                                />
+                                            )}
+
+                                            {/* Slider with percentage */}
+                                            {setting.type === "slider" && (
+                                                <div className="flex items-center gap-1">
+                                                    <div className="w-16">
+                                                        <Slider
+                                                            value={setting.value as number[]}
+                                                            onValueChange={setting.onSliderChange}
+                                                            max={100}
+                                                            step={1}
+                                                            disabled={loadingStates.sfxVolume}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Action buttons */}
+                                            {setting.actions && (
+                                                <div className="flex gap-1">
+                                                    {setting.actions.map((action, index) => (
+                                                        <Button
+                                                            key={index}
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={action.onClick}
+                                                            disabled={
+                                                                action.disabled ||
+                                                                (setting.id === "profile-picture" && loadingStates.profilePic)
+                                                            }
+                                                            className={`text-xs px-2 py-1 whitespace-nowrap ${action.label === "Remove"
+                                                                ? "border-red-500 text-red-400 hover:bg-red-500/10"
+                                                                : "border-blue-500 text-blue-400 hover:bg-blue-500/10"
+                                                                }`}
+                                                        >
+                                                            {(setting.id === "profile-picture" && loadingStates.profilePic)
+                                                                ? "..."
+                                                                : action.label}
+                                                        </Button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+
+
                 </div>
             </Card>
 
             {/* Change Email Dialog */}
             <Dialog open={showChangeEmail} onOpenChange={setShowChangeEmail}>
-                <DialogContent className="bg-gray-900 border-gray-700">
+                <DialogContent className="bg-gray-900 border-gray-700 max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-white">Change Email</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogTitle className="text-white text-lg">Change Email</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-sm">
                             Enter your new email address. You'll need to verify it again.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div>
-                            <label className="text-gray-300 text-sm">Current Email</label>
+                            <label className="text-gray-300 text-sm block mb-1">Current Email</label>
                             <Input
                                 value={email}
                                 disabled
-                                className="bg-gray-800 border-gray-600 text-gray-400"
+                                className="bg-gray-800 border-gray-600 text-gray-400 w-full"
                             />
                         </div>
                         <div>
-                            <label className="text-gray-300 text-sm">New Email</label>
+                            <label className="text-gray-300 text-sm block mb-1">New Email</label>
                             <Input
                                 type="email"
                                 value={newEmail}
                                 onChange={(e) => setNewEmail(e.target.value)}
                                 placeholder="Enter new email"
-                                className="bg-gray-800 border-gray-600 text-white"
+                                className="bg-gray-800 border-gray-600 text-white w-full"
                             />
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
                         <Button
                             variant="outline"
                             onClick={() => setShowChangeEmail(false)}
-                            className="border-gray-600 text-gray-300"
+                            className="border-gray-600 text-gray-300 w-full sm:w-auto"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleChangeEmail}
                             disabled={!newEmail || newEmail === email || loadingStates.email}
-                            className="bg-green-500 hover:bg-green-600 text-black"
+                            className="bg-green-500 hover:bg-green-600 text-black w-full sm:w-auto"
                         >
                             {loadingStates.email ? "Updating..." : "Update Email"}
                         </Button>
@@ -431,44 +562,44 @@ const SettingsView = () => {
 
             {/* Change Username Dialog */}
             <Dialog open={showChangeUsername} onOpenChange={setShowChangeUsername}>
-                <DialogContent className="bg-gray-900 border-gray-700">
+                <DialogContent className="bg-gray-900 border-gray-700 max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-white">Change Username</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogTitle className="text-white text-lg">Change Username</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-sm">
                             Choose a new username for your account.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div>
-                            <label className="text-gray-300 text-sm">Current Username</label>
+                            <label className="text-gray-300 text-sm block mb-1">Current Username</label>
                             <Input
                                 value={username}
                                 disabled
-                                className="bg-gray-800 border-gray-600 text-gray-400"
+                                className="bg-gray-800 border-gray-600 text-gray-400 w-full"
                             />
                         </div>
                         <div>
-                            <label className="text-gray-300 text-sm">New Username</label>
+                            <label className="text-gray-300 text-sm block mb-1">New Username</label>
                             <Input
                                 value={newUsername}
                                 onChange={(e) => setNewUsername(e.target.value)}
                                 placeholder="Enter new username"
-                                className="bg-gray-800 border-gray-600 text-white"
+                                className="bg-gray-800 border-gray-600 text-white w-full"
                             />
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
                         <Button
                             variant="outline"
                             onClick={() => setShowChangeUsername(false)}
-                            className="border-gray-600 text-gray-300"
+                            className="border-gray-600 text-gray-300 w-full sm:w-auto"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleChangeUsername}
                             disabled={!newUsername || newUsername === username || loadingStates.username}
-                            className="bg-green-500 hover:bg-green-600 text-black"
+                            className="bg-green-500 hover:bg-green-600 text-black w-full sm:w-auto"
                         >
                             {loadingStates.username ? "Updating..." : "Update Username"}
                         </Button>
@@ -478,57 +609,57 @@ const SettingsView = () => {
 
             {/* Change Password Dialog */}
             <Dialog open={showChangePassword} onOpenChange={setShowChangePassword}>
-                <DialogContent className="bg-gray-900 border-gray-700">
+                <DialogContent className="bg-gray-900 border-gray-700 max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-white">Change Password</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogTitle className="text-white text-lg">Change Password</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-sm">
                             Enter your current password and choose a new one.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                         <div>
-                            <label className="text-gray-300 text-sm">Current Password</label>
+                            <label className="text-gray-300 text-sm block mb-1">Current Password</label>
                             <Input
                                 type="password"
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 placeholder="Enter current password"
-                                className="bg-gray-800 border-gray-600 text-white"
+                                className="bg-gray-800 border-gray-600 text-white w-full"
                             />
                         </div>
                         <div>
-                            <label className="text-gray-300 text-sm">New Password</label>
+                            <label className="text-gray-300 text-sm block mb-1">New Password</label>
                             <Input
                                 type="password"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 placeholder="Enter new password"
-                                className="bg-gray-800 border-gray-600 text-white"
+                                className="bg-gray-800 border-gray-600 text-white w-full"
                             />
                         </div>
                         <div>
-                            <label className="text-gray-300 text-sm">Confirm New Password</label>
+                            <label className="text-gray-300 text-sm block mb-1">Confirm New Password</label>
                             <Input
                                 type="password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 placeholder="Confirm new password"
-                                className="bg-gray-800 border-gray-600 text-white"
+                                className="bg-gray-800 border-gray-600 text-white w-full"
                             />
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
                         <Button
                             variant="outline"
                             onClick={() => setShowChangePassword(false)}
-                            className="border-gray-600 text-gray-300"
+                            className="border-gray-600 text-gray-300 w-full sm:w-auto"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleChangePassword}
                             disabled={!currentPassword || !newPassword || !confirmPassword || loadingStates.password}
-                            className="bg-green-500 hover:bg-green-600 text-black"
+                            className="bg-green-500 hover:bg-green-600 text-black w-full sm:w-auto"
                         >
                             {loadingStates.password ? "Updating..." : "Update Password"}
                         </Button>
@@ -538,35 +669,33 @@ const SettingsView = () => {
 
             {/* Change Profile Picture Dialog */}
             <Dialog open={showChangeProfilePic} onOpenChange={setShowChangeProfilePic}>
-                <DialogContent className="bg-gray-900 border-gray-700">
+                <DialogContent className="bg-gray-900 border-gray-700 max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-white">Change Profile Picture</DialogTitle>
-                        <DialogDescription className="text-gray-400">
+                        <DialogTitle className="text-white text-lg">Change Profile Picture</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-sm">
                             Upload a new profile picture. Supported formats: JPG, PNG, GIF (max 5MB)
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-6">
                         {/* Current Profile Picture */}
-                        <div className="flex flex-col items-center justify-between gap-4">
-                            <div>
-                                <label className="text-gray-300 text-sm">Current Profile Picture</label>
-                                <div className="mt-2 flex justify-center">
-                                    <Avatar className="h-20 w-20">
-                                        <AvatarImage src={profilePic} alt="Current Profile" />
-                                        <AvatarFallback className="text-2xl">👤</AvatarFallback>
-                                    </Avatar>
-                                </div>
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="text-center">
+                                <label className="text-gray-300 text-sm block mb-2">Current Profile Picture</label>
+                                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 mx-auto">
+                                    <AvatarImage src={profilePic} alt="Current Profile" />
+                                    <AvatarFallback className="text-xl sm:text-2xl">👤</AvatarFallback>
+                                </Avatar>
                             </div>
                         </div>
 
                         {/* File Upload */}
                         <div>
-                            <label className="text-gray-300 text-sm">Select New Picture</label>
+                            <label className="text-gray-300 text-sm block mb-1">Select New Picture</label>
                             <Input
                                 type="file"
                                 accept="image/*"
                                 onChange={handleFileSelect}
-                                className="bg-gray-800 border-gray-600 text-white mt-2 cursor-pointer"
+                                className="bg-gray-800 border-gray-600 text-white cursor-pointer w-full"
                             />
                         </div>
 
@@ -574,14 +703,14 @@ const SettingsView = () => {
                         {previewUrl && (
                             <div className="flex flex-col items-center gap-2">
                                 <label className="text-gray-300 text-sm">Preview</label>
-                                <Avatar className="h-20 w-20">
+                                <Avatar className="h-16 w-16 sm:h-20 sm:w-20">
                                     <AvatarImage src={previewUrl} alt="Preview" />
-                                    <AvatarFallback className="text-2xl">👤</AvatarFallback>
+                                    <AvatarFallback className="text-xl sm:text-2xl">👤</AvatarFallback>
                                 </Avatar>
                             </div>
                         )}
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
                         <Button
                             variant="outline"
                             onClick={() => {
@@ -589,14 +718,14 @@ const SettingsView = () => {
                                 setSelectedFile(null);
                                 setPreviewUrl("");
                             }}
-                            className="border-gray-600 text-gray-300"
+                            className="border-gray-600 text-gray-300 w-full sm:w-auto"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleUploadProfilePic}
                             disabled={!selectedFile || loadingStates.profilePic}
-                            className="bg-green-500 hover:bg-green-600 text-black disabled:cursor-not-allowed"
+                            className="bg-green-500 hover:bg-green-600 text-black disabled:cursor-not-allowed w-full sm:w-auto"
                         >
                             {loadingStates.profilePic ? "Uploading..." : "Update Picture"}
                         </Button>

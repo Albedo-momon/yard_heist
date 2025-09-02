@@ -174,7 +174,7 @@ const HistoryView = () => {
                                 variant={activeFilter === filter ? "default" : "outline"}
                                 size="sm"
                                 onClick={() => handleFilterChange(filter)}
-                                className={`mb-2 ${activeFilter === filter
+                                className={`mb-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${activeFilter === filter
                                     ? "bg-green-500 text-black hover:bg-green-600"
                                     : "border-gray-600 text-gray-300 hover:text-green-400 hover:border-green-500"
                                     }`}
@@ -191,8 +191,8 @@ const HistoryView = () => {
                         </div>
                     ) : (
                         <>
-                            {/* History Table */}
-                            <div className="border border-gray-700 rounded-lg overflow-hidden">
+                            {/* Desktop Table View */}
+                            <div className="hidden lg:block border border-gray-700 rounded-lg overflow-hidden">
                                 <Table>
                                     <TableHeader>
                                         <TableRow className="border-gray-700 hover:bg-transparent">
@@ -255,6 +255,65 @@ const HistoryView = () => {
                                         )}
                                     </TableBody>
                                 </Table>
+                            </div>
+
+                            {/* Mobile Card View */}
+                            <div className="lg:hidden space-y-4">
+                                {historyData.length === 0 ? (
+                                    <div className="text-center py-12">
+                                        <div className="text-gray-500 text-lg">NO BETS FOUND.</div>
+                                    </div>
+                                ) : (
+                                    historyData.map((bet) => (
+                                        <div key={bet.id} className="bg-gray-800/30 border border-gray-700 rounded-lg p-4 space-y-3">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-lg">🎮</span>
+                                                        <span className="text-white font-medium">{bet.game}</span>
+                                                    </div>
+                                                    <div className="text-gray-400 text-sm font-mono">{bet.id}</div>
+                                                    <div className="text-gray-400 text-sm">{bet.date}</div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <Badge
+                                                        variant="outline"
+                                                        className={`font-medium mb-2 ${bet.profit >= 0
+                                                            ? "border-green-500 text-green-400"
+                                                            : "border-red-500 text-red-400"
+                                                            }`}
+                                                    >
+                                                        {formatProfit(bet.profit)}
+                                                    </Badge>
+                                                    <div className="text-white font-medium">{bet.payout}</div>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-400">Bet:</span>
+                                                    <span className="text-gray-300 font-medium">{bet.betAmount}</span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-400">Multiplier:</span>
+                                                    <span className="text-gray-300 font-medium">{bet.multiplier}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex justify-between items-center pt-2 border-t border-gray-700">
+                                                <span className="text-gray-400 text-sm">Fairness:</span>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleVerifyFairness(bet)}
+                                                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 text-sm px-3 py-1"
+                                                >
+                                                    🎲 Verify
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
 
                             {/* Pagination */}

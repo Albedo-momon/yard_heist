@@ -75,39 +75,41 @@ const TransactionsView = () => {
         <Card className="bg-card border-border">
             <div className="p-6">
                 {/* Filter Buttons */}
-                <div className="flex flex-wrap gap-2 mb-6 justify-between">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-gray-400 border shadow-lg  mb-2 hover:bg-primary/90 hover:text-black"
-                            >
-                                Filter by ▼
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-gray-800 border flex flex-col gap-2 border-gray-600 text-white ">
-                            {filters.map((filter) => (
-                                <DropdownMenuItem
-                                    key={filter}
-                                    onClick={() => {
-                                        setCurrentPage(1);
-                                        setActiveFilter(filter);
-                                    }}
-                                    className={`cursor-pointer ${activeFilter === filter
-                                        ? "bg-primary text-black font-medium"
-                                        : "text-gray hover:bg-primary/90 hover:text-black "
-                                        }`}
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-6">
+                    <div className="flex flex-wrap gap-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-gray-400 border shadow-lg hover:bg-primary/90 hover:text-black w-full sm:w-auto"
                                 >
-                                    {filter}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                    Filter by: {activeFilter} ▼
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-gray-800 border flex flex-col gap-2 border-gray-600 text-white w-48">
+                                {filters.map((filter) => (
+                                    <DropdownMenuItem
+                                        key={filter}
+                                        onClick={() => {
+                                            setCurrentPage(1);
+                                            setActiveFilter(filter);
+                                        }}
+                                        className={`cursor-pointer ${activeFilter === filter
+                                            ? "bg-primary text-black font-medium"
+                                            : "text-gray-300 hover:bg-primary/90 hover:text-black"
+                                            }`}
+                                    >
+                                        {filter}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
 
-                {/* Transactions Table */}
-                <div className="border border-gray-700 rounded-lg overflow-hidden">
+                {/* Desktop Table View */}
+                <div className="hidden md:block border border-gray-700 rounded-lg overflow-hidden">
                     <Table>
                         <TableHeader>
                             <TableRow className="border-gray-700 hover:bg-transparent">
@@ -140,6 +142,43 @@ const TransactionsView = () => {
                             )}
                         </TableBody>
                     </Table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-4">
+                    {transactions.length === 0 ? (
+                        <div className="text-center py-12">
+                            <div className="text-gray-500 text-lg">NO TRANSACTIONS FOUND.</div>
+                        </div>
+                    ) : (
+                        transactions.map((t, index) => (
+                            <div key={index} className="bg-gray-800/30 border border-gray-700 rounded-lg p-4 space-y-3">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <div className="text-white font-medium">{t.type}</div>
+                                        <div className="text-gray-400 text-sm">{t.date}</div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-white font-medium">{t.amount}</div>
+                                        <div className={`text-xs px-2 py-1 rounded ${t.status === "Success"
+                                            ? "bg-green-500/20 text-green-400"
+                                            : "bg-yellow-500/20 text-yellow-400"
+                                            }`}>
+                                            {t.status}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Method:</span>
+                                    <span className="text-gray-300">{t.method}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Transaction ID:</span>
+                                    <span className="text-gray-300 font-mono text-xs">{t.id}</span>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
 
                 {/* Pagination */}
