@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Play, Zap } from "lucide-react";
-import logo from "@/assets/logo-yardhiest.jpg";
 import heroImage from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
@@ -12,8 +11,8 @@ const HeroSection = () => {
       />
       <div className="absolute inset-0 bg-gradient-to-r from-[#10141A]/95 via-[#10141A]/80 to-transparent" />
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className="max-w-4xl mx-auto text-center sm:text-left">
+      <div className="relative z-10 container mx-auto lg:mx-0 px-4 sm:px-6 lg:px-0 py-12 sm:py-16 lg:py-20">
+        <div className="max-w-4xl lg:max-w-none mx-auto text-center sm:text-left">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 leading-tight">
             <span className="text-foreground block">Play, Heist.</span>
             <div className="mt-4 w-full sm:mt-6 lg:mt-10">
