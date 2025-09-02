@@ -25,7 +25,7 @@ const GameCard = ({ title, image, category, rating, isHot, isNew, isComingSoon }
         {/* Overlay badges */}
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex gap-1 sm:gap-2">
           {isNew && (
-            <span className="bg-gradient-to-r from-green-500/90 to-green-400/70 text-black/90 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
+            <span className="bg-gradient-to-r from-green-500/90 to-green-400/70 text-black/90 text-xs font-bold px-2 py-1 rounded-full">
               NEW
             </span>
           )}
