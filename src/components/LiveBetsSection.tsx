@@ -97,29 +97,29 @@ const LiveBetsSection = () => {
   });
 
   return (
-    <section id="live-bets" className="py-20 bg-black">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+    <section id="live-bets" className="py-12 sm:py-16 lg:py-20 bg-black">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             <span className="bg-gradient-to-r from-green-500 to-green-400 bg-clip-text text-transparent">
               Live Bets
             </span>
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg">
             Watch real-time betting action from players around the world
           </p>
         </div>
 
         <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Tabs */}
-            <div className="flex space-x-1 mb-6 border-b border-border/30">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-1 mb-6 border-b border-border/30">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
                   variant="ghost"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-6 py-3 rounded-none border-b-2 transition-all duration-200 ${activeTab === tab.id
+                  className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-none border-b-2 transition-all duration-200 text-sm sm:text-base ${activeTab === tab.id
                     ? "border-primary text-primary bg-primary/10"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                     }`}
