@@ -25,10 +25,14 @@ const Dashboard = () => {
                 <Header onToggleChat={handleToggleChat} />
                 <main>
                     <HeroSection />
-                    <GamesSection />
+                    <div id="games">
+                        <GamesSection />
+                    </div>
                     {/* <PromotionsSection /> */}
+                    <div id="live-bets">
+                        <LiveBetsSection />
+                    </div>
                     <StatsSection />
-                    <LiveBetsSection />
                     <Footer />
                 </main>
             </div>
