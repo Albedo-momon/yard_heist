@@ -99,7 +99,7 @@ const games: Game[] = [
 const CountdownTimer = () => {
   const calculateTimeLeft = () => {
     // Set target date to September 4th, 2024
-    const targetDate = new Date(2024, 8, 4); // months are 0-based, so 8 is September
+    const targetDate = new Date(2024, 8, 14); // months are 0-based, so 8 is September
     const now = new Date();
 
     // Force the current year to 2024 for testing
