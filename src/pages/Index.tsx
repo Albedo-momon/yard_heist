@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Shield, Globe, XIcon, Github, Mail, Wallet, Play, Lock, Zap, Target } from "lucide-react";
+import { Shield, Globe, XIcon, Github, Mail, Wallet, Play, Lock, Zap, Target } from "lucide-react";
 
 // Import assets
 import logoImage from "@/assets/logo-yardhiest.jpg";
@@ -96,69 +97,14 @@ const games: Game[] = [
   }
 ];
 
-const CountdownTimer = () => {
-  const calculateTimeLeft = () => {
-    // Set target date to September 4th, 2024
-    const targetDate = new Date(2024, 8, 18); // months are 0-based, so 8 is September
-    const now = new Date();
 
-    // Force the current year to 2024 for testing
-    now.setFullYear(2024);
-
-    const difference = targetDate.getTime() - now.getTime();
-
-    // Ensure we don't get negative values
-    const timeLeft = Math.max(difference, 0);
-
-    // Calculate time units
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <motion.div
-      key={value}
-      className="flex flex-col items-center"
-    >
-      <div className="bg-card  border border-border rounded-lg p-1 md:p-4 min-w-[80px] text-center paint-splatter-purple">
-        <div className="text-2xl md:text-4xl font-bold ">
-          {value.toString().padStart(2, '0')}
-        </div>
-        <div className="text-sm text-muted-foreground uppercase tracking-wider  ">
-          {label}
-        </div>
-      </div>
-    </motion.div>
-  );
-
-  return (
-    <div className="flex gap-2 md:gap-4 justify-center ">
-      <TimeUnit value={timeLeft.days} label="Days" />
-      <TimeUnit value={timeLeft.hours} label="Hours" />
-      <TimeUnit value={timeLeft.minutes} label="Minutes" />
-      <TimeUnit value={timeLeft.seconds} label="Seconds" />
-    </div>
-  );
-};
 
 const GameCard = ({ game }: { game: Game }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const [notifyEnabled, setNotifyEnabled] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -268,6 +214,7 @@ const TheYardHeist = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -282,22 +229,32 @@ const TheYardHeist = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border">
         <div className="container mx-auto px-2 py-2 flex items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <img
               src={logoImage}
               alt="Yard Heist Logo"
-              className="w-10 h-10 md:w-20 md:h-20 rounded-lg"
+              className="w-10 h-10 md:w-10 md:h-10 rounded-lg"
             />
             <img
               src={logoNameImage}
               alt="Yard Heist Name"
-              className="h-10 md:h-20 object-contain"
+              className="h-10 md:h-10 object-contain"
             />
+           
           </div>
+          <div className='flex items-center gap-4'>
           <Button variant="outline" className="paint-splatter-green" onClick={() => setOpen(true)}>
-            <Wallet className="w-4 h-4 mr-2" />
+            <Wallet className="w-4 h-4" />
             <span className='hidden sm:inline'>Connect</span>  Wallet
           </Button>
+          <Button
+            variant="outline"
+            className='hover:text-black text-sm md:text-base text-white '
+            onClick={() => navigate('/docs')}
+          >
+            Docs
+          </Button>
+          </div>
 
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>
@@ -331,9 +288,10 @@ const TheYardHeist = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className='flex items-center flex-col relative z-10'
+            className='flex items-center flex-col relative z-10 gap-20'
           >
-            <motion.h1
+          <div className='flex items-center flex-col'>
+             <motion.h1
               className="text-5xl md:text-9xl font-bold mb-6 glitch-text"
               animate={{
                 filter: [
@@ -349,10 +307,10 @@ const TheYardHeist = () => {
             <p className="text-xl md:text-5xl mb-12 text-muted-foreground w-[70%]">
               Your <span className="paint-drip-orange">Game</span>, Your <span className='paint-drip-orange'>Skill</span>, Your <span className='paint-drip-orange'>Future</span>.
             </p>
+          </div>
+           
 
-            <div className="mb-12">
-              <CountdownTimer />
-            </div>
+            {/* Timer removed */}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
 
