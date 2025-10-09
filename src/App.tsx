@@ -23,16 +23,6 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* <Route path="/docs" element={<DocsLayout />}>
-            <Route index element={<Overview />} />
-            <Route path="overview" element={<Overview />} />
-            <Route path="the-game" element={<TheGame />} />
-            <Route path="precursors" element={<Precursors />} />
-            <Route path="key-cult" element={<KeyCult />} />
-            <Route path="tokenomics" element={<Tokenomics />} />
-          </Route> */}
-          {/* <Route path="/games/coin-toss" element={<CoinToss />} /> */}
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
