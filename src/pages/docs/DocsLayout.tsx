@@ -55,6 +55,10 @@ const DocsLayout = () => {
   const isActive = (path: string) => {
     const normalized = location.pathname.replace(/\/$/, "");
     const segments = normalized.split("/");
+    // Treat the index route (/docs) as "overview" for active highlighting
+    if (normalized === "/docs" && path === "overview") {
+      return true;
+    }
     return segments.includes(path);
   };
   const navigate = useNavigate();

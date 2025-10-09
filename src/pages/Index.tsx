@@ -247,13 +247,13 @@ const TheYardHeist = () => {
             <Wallet className="w-4 h-4" />
             <span className='hidden sm:inline'>Connect</span>  Wallet
           </Button>
-          {/* <Button
+          <Button
             variant="outline"
             className='hover:text-black text-sm md:text-base text-white '
             onClick={() => navigate('/docs')}
           >
             Docs
-          </Button> */}
+          </Button>
           </div>
 
           <Dialog open={open} onOpenChange={setOpen}>
