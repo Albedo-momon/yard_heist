@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Globe, XIcon, Github, Mail, Wallet, Play, Lock, Zap, Target } from "lucide-react";
+import { Shield, Globe, XIcon, Github, Mail, Wallet, Play, Lock, Zap, Target, DiscIcon } from "lucide-react";
 
 // Import assets
 import logoImage from "@/assets/logo-yardhiest.jpg";
@@ -22,6 +22,10 @@ import shadowDiceImage from "@/assets/shadow-dice-raid.jpg";
 import highStakeImage from "@/assets/high-stake-heist.jpg";
 import cryptographImage from "@/assets/cryptograph.jpg";
 import solanaLogo from "@/assets/solana.png";
+import githubLogo from "@/assets/icons8-github-50.png";
+import discord from "@/assets/icons8-discord-100.png";
+import twitter from "@/assets/icons8-x-96.png";
+import mail from "@/assets/icons8-mail-96.png";
 
 interface Game {
   id: string;
@@ -603,7 +607,7 @@ const TheYardHeist = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <XIcon className="w-4 h-4" />
+                    <img src={twitter} alt="" width={30} />
                   </a>
 
                 </Button>
@@ -613,7 +617,16 @@ const TheYardHeist = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Github className="w-4 h-4" />
+                    <img src={githubLogo} alt="" width={30} />
+                  </a>
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <a
+                    href="https://discord.com/invite/UnCweZj8Q2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={discord} alt="" width={30} />
                   </a>
                 </Button>
 
@@ -629,7 +642,7 @@ const TheYardHeist = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Mail className="w-4 h-4" />
+                    <img src={mail} alt="" width={30} />
                   </a>
                 </Button>
                 {/* <p>18+ only â€¢ Gamble responsibly</p>
