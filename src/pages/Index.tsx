@@ -331,23 +331,18 @@ const TheYardHeist = () => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="paint-drip-purple">Join the Heist </DialogTitle>
+                    <DialogTitle className="paint-drip-purple">Join our Discord</DialogTitle>
                     <DialogDescription>
-                      Be the first to know when The Yard Heist launches and win rewards
+                      Get notified and join the community on Discord.
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleEmailSubmit} className="space-y-4">
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                    <Button type="submit" className="w-full">
-                      {isSubscribed ? 'Subscribed!' : 'Subscribe'}
+                  <div className="space-y-4">
+                    <Button className="w-full" asChild>
+                      <a href="https://discord.gg/rqb4KJ7BF" target="_blank" rel="noopener noreferrer">
+                        Join Discord
+                      </a>
                     </Button>
-                  </form>
+                  </div>
                 </DialogContent>
               </Dialog>
 
